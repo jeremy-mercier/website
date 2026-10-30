@@ -1122,7 +1122,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
       <article class="vwrap vcard v1 ocard" id="individuel" data-reveal="scale">
         <div class="vhead"><span class="vh-ico" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#d-glove"/></svg></span><div><h3>Coaching <span class="serif">individuel</span></h3><p class="vfor flat"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg>Pour les indépendants</p></div></div>
         <div class="vid">
-          <video muted loop playsinline preload="none" poster="media/individuel.jpg" data-src="media/individuel.mp4" aria-label="Jérémy en séance de coaching individuel sur pattes d’ours"></video>
+          <video muted loop playsinline preload="none" poster="media/individuel.webp" width="720" height="1280" data-src="media/individuel-720.mp4" data-sources="media/individuel-480.mp4 480, media/individuel-720.mp4 720, media/individuel-1080.mp4 1080" aria-label="Jérémy en séance de coaching individuel sur pattes d’ours"></video>
           <div class="vlabel">
             <span class="tag vtag"><span class="live"></span>En séance</span>
             <button class="vbtn" type="button" data-state="playing" aria-label="Mettre la vidéo en pause"><svg class="ic i-pause" aria-hidden="true"><use href="#i-pause"/></svg><svg class="ic i-play" aria-hidden="true"><use href="#i-play"/></svg></button>
@@ -1150,7 +1150,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
       <article class="vwrap vcard v2 ocard" id="team-building" data-reveal="scale" style="--d:.15s">
         <div class="vhead"><span class="vh-ico" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#d-bolt"/></svg></span><div><h3><span class="serif">Team</span> building</h3><p class="vfor flat"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg>Pour les entreprises</p></div></div>
         <div class="vid">
-          <video muted loop playsinline preload="none" poster="media/collectif.jpg" data-src="media/collectif.mp4" aria-label="Jérémy en séance de team building devant un groupe"></video>
+          <video muted loop playsinline preload="none" poster="media/collectif.webp" width="720" height="1280" data-src="media/collectif-720.mp4" data-sources="media/collectif-480.mp4 480, media/collectif-720.mp4 720" aria-label="Jérémy en séance de team building devant un groupe"></video>
           <div class="vlabel">
             <span class="tag vtag"><span class="live"></span>En séance</span>
             <button class="vbtn" type="button" data-state="playing" aria-label="Mettre la vidéo en pause"><svg class="ic i-pause" aria-hidden="true"><use href="#i-pause"/></svg><svg class="ic i-play" aria-hidden="true"><use href="#i-play"/></svg></button>
@@ -1478,28 +1478,64 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
     });
   }
 
-  /* Vidéos : lecture en boucle quand elles sont visibles, préchargées un peu avant, bouton pause */
+  /* Vidéos : lecture en boucle quand elles sont visibles, bouton pause.
+     - chaque vidéo existe en plusieurs tailles (data-sources) : on charge la plus légère qui reste nette
+       sur cet écran (largeur de la carte × densité de pixels, 2 au maximum), la plus petite si la connexion est lente
+     - le téléchargement démarre bien avant l'arrivée à l'écran, pour que la lecture soit immédiate
+     - économie de données ou connexion très lente (2G) : pas de lecture automatique, la photo reste et le bouton lance la vidéo
+     - si un fichier ne peut pas être lu, on essaie la version plus légère, sinon la photo reste affichée */
   var vids=d.querySelectorAll('video[data-src]');
+  var conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection||{};
+  var lowData=!!(conn.saveData||/^(slow-2g|2g)$/.test(conn.effectiveType||''));
+  var slowNet=lowData||(conn.effectiveType==='3g');
   function setBtn(v,playing){
     var btn=v.parentNode.querySelector('.vbtn'); if(!btn) return;
     btn.setAttribute('data-state',playing?'playing':'paused');
     btn.setAttribute('aria-label',playing?'Mettre la vidéo en pause':'Lire la vidéo');
   }
+  function sourcesOf(v){
+    var list=(v.getAttribute('data-sources')||'').split(',').map(function(s){
+      var p=s.trim().split(/\s+/); return {url:p[0],w:parseInt(p[1],10)||0};
+    }).filter(function(s){ return s.url; }).sort(function(a,b){ return a.w-b.w; });
+    return list.length?list:[{url:v.getAttribute('data-src'),w:0}];
+  }
+  function pickIndex(v,list){
+    if(slowNet) return 0;
+    var need=(v.clientWidth||360)*Math.min(window.devicePixelRatio||1,2)*0.9;
+    for(var i=0;i<list.length;i++){ if(list[i].w>=need) return i; }
+    return list.length-1;
+  }
   vids.forEach(function(v){
     v.loop=true; v.muted=true; v.defaultMuted=true; v.setAttribute('playsinline',''); v.disablePictureInPicture=true;
-    v._manual=false;
+    v._manual=false; v._vis=false;
     var btn=v.parentNode.querySelector('.vbtn');
-    function ensureSrc(){ if(!v.getAttribute('src')){ v.preload='auto'; v.src=v.getAttribute('data-src'); v.load(); } }
+    var list=sourcesOf(v), idx=-1;
+    function ensureSrc(){
+      if(v.getAttribute('src')) return;
+      idx=pickIndex(v,list);
+      v.preload='auto'; v.src=list[idx].url; v.load();
+    }
     function play(){ ensureSrc(); var p=v.play(); if(p&&p.then){ p.then(function(){setBtn(v,true);},function(){setBtn(v,false);}); } }
+    v.addEventListener('error',function(){
+      if(idx>0){ idx--; v.src=list[idx].url; v.load(); if(v._vis&&!v._manual) play(); }
+      else setBtn(v,false);
+    });
     if(btn){ btn.addEventListener('click',function(){ if(v.paused){ v._manual=false; play(); } else { v._manual=true; v.pause(); setBtn(v,false); } }); }
-    if(reduce){ setBtn(v,false); return; }
+    if(reduce||lowData){ setBtn(v,false); return; }
     if('IntersectionObserver' in window){
       new IntersectionObserver(function(es){
         es.forEach(function(e){
+          v._vis=e.isIntersecting;
           if(e.isIntersecting){ if(!v._manual) play(); } else { if(!v.paused){ v.pause(); } }
         });
       },{threshold:.2,rootMargin:'300px 0px'}).observe(v);
-    } else { play(); }
+      if(!slowNet){
+        var pre=new IntersectionObserver(function(es){
+          es.forEach(function(e){ if(e.isIntersecting){ ensureSrc(); pre.disconnect(); } });
+        },{rootMargin:'1400px 0px'});
+        pre.observe(v);
+      }
+    } else { v._vis=true; play(); }
   });
 
   /* Mes coachings : chaque carte ouvre son détail, un seul à la fois.
