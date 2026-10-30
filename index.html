@@ -972,6 +972,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
 .bk-card{position:relative;background:#fff;border-radius:36px;border:1px solid var(--hairline);box-shadow:0 30px 70px rgba(10,57,34,.14);overflow:hidden}
 .bk-bar{height:6px;background:linear-gradient(90deg,var(--forest),var(--leaf) 55%,var(--gold))}
 .bk-frame{display:block;width:100%;height:760px;border:0;background:#fff}
+.bk-frame.bk-wait{position:absolute;left:0;top:6px;opacity:0;pointer-events:none}
 .bk-load{display:grid;place-items:center;align-content:center;gap:16px;min-height:420px;color:var(--graphite);font-weight:600}
 .bk-spin{width:38px;height:38px;border-radius:50%;border:4px solid var(--mint);border-top-color:var(--leaf-deep);animation:bkspin .9s linear infinite}
 @keyframes bkspin{to{rotate:360deg}}
@@ -1760,20 +1761,23 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
     var q=['embed_domain='+encodeURIComponent(location.hostname||'localhost'),'embed_type=Inline',
       'background_color=ffffff','text_color=0a3922','primary_color=0e8a50'].join('&');
     calFrame=d.createElement('iframe');
-    calFrame.className='bk-frame'; calFrame.title='Calendrier de réservation de l’appel de 5 minutes';
-    calFrame.src=CAL_URL+'?'+q; calFrame.hidden=true;
+    /* l'iframe garde sa vraie taille (invisible, hors flux) pendant le chargement : cachée avec « hidden »,
+       Calendly ne démarre pas et n'envoie jamais son signal, donc elle ne s'afficherait jamais */
+    calFrame.className='bk-frame bk-wait'; calFrame.title='Calendrier de réservation de l’appel de 5 minutes';
+    calFrame.src=CAL_URL+'?'+q;
     $('bkCard').appendChild(calFrame);
-    /* si le calendrier ne répond pas (bloqueur, réseau, hébergement restreint), on propose le lien direct */
+    /* si le calendrier ne répond pas (bloqueur, réseau, hébergement restreint), on propose le lien direct ;
+       s'il répond finalement plus tard, il remplace ce lien (voir l'écouteur « message » ci-dessous) */
     calTimer=setTimeout(function(){
       if(calSeen) return;
-      $('bkLoad').hidden=true; calFrame.hidden=true; $('bkFb').hidden=false;
-    },9000);
+      $('bkLoad').hidden=true; $('bkFb').hidden=false;
+    },12000);
   }
   window.addEventListener('message',function(e){
     if(e.origin!==CAL_ORIGIN) return;
     var ev=e.data&&e.data.event; if(typeof ev!=='string'||ev.indexOf('calendly.')!==0) return;
     calSeen=true; clearTimeout(calTimer);
-    $('bkLoad').hidden=true; $('bkFb').hidden=true; if(calFrame) calFrame.hidden=false;
+    $('bkLoad').hidden=true; $('bkFb').hidden=true; if(calFrame) calFrame.classList.remove('bk-wait');
     if(ev==='calendly.event_scheduled'){
       var ok=$('bkOk'); ok.hidden=false;
       try{ ok.scrollIntoView({block:'center',behavior:reduce?'auto':'smooth'}); }catch(x){}
