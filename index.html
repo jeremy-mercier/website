@@ -1122,7 +1122,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
       <article class="vwrap vcard v1 ocard" id="individuel" data-reveal="scale">
         <div class="vhead"><span class="vh-ico" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#d-glove"/></svg></span><div><h3>Coaching <span class="serif">individuel</span></h3><p class="vfor flat"><svg class="ic" aria-hidden="true"><use href="#i-user"/></svg>Pour les indépendants</p></div></div>
         <div class="vid">
-          <video muted loop playsinline preload="none" poster="media/individuel.webp" width="720" height="1280" data-src="media/individuel-720.mp4" data-sources="media/individuel-480.mp4 480, media/individuel-720.mp4 720, media/individuel-1080.mp4 1080" aria-label="Jérémy en séance de coaching individuel sur pattes d’ours"></video>
+          <video muted loop playsinline preload="none" poster="media/individuel.webp" width="720" height="1280" data-src="media/individuel-720.mp4" data-sources="media/individuel-480.mp4 480 801963, media/individuel-720.mp4 720 1604534, media/individuel-1080.mp4 1080 3196265" aria-label="Jérémy en séance de coaching individuel sur pattes d’ours"></video>
           <div class="vlabel">
             <span class="tag vtag"><span class="live"></span>En séance</span>
             <button class="vbtn" type="button" data-state="playing" aria-label="Mettre la vidéo en pause"><svg class="ic i-pause" aria-hidden="true"><use href="#i-pause"/></svg><svg class="ic i-play" aria-hidden="true"><use href="#i-play"/></svg></button>
@@ -1150,7 +1150,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
       <article class="vwrap vcard v2 ocard" id="team-building" data-reveal="scale" style="--d:.15s">
         <div class="vhead"><span class="vh-ico" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#d-bolt"/></svg></span><div><h3><span class="serif">Team</span> building</h3><p class="vfor flat"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg>Pour les entreprises</p></div></div>
         <div class="vid">
-          <video muted loop playsinline preload="none" poster="media/collectif.webp" width="720" height="1280" data-src="media/collectif-720.mp4" data-sources="media/collectif-480.mp4 480, media/collectif-720.mp4 720" aria-label="Jérémy en séance de team building devant un groupe"></video>
+          <video muted loop playsinline preload="none" poster="media/collectif.webp" width="720" height="1280" data-src="media/collectif-720.mp4" data-sources="media/collectif-480.mp4 480 1102819, media/collectif-720.mp4 720 2424831" aria-label="Jérémy en séance de team building devant un groupe"></video>
           <div class="vlabel">
             <span class="tag vtag"><span class="live"></span>En séance</span>
             <button class="vbtn" type="button" data-state="playing" aria-label="Mettre la vidéo en pause"><svg class="ic i-pause" aria-hidden="true"><use href="#i-pause"/></svg><svg class="ic i-play" aria-hidden="true"><use href="#i-play"/></svg></button>
@@ -1478,16 +1478,21 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
     });
   }
 
-  /* Vidéos : lecture en boucle quand elles sont visibles, bouton pause.
-     - chaque vidéo existe en plusieurs tailles (data-sources) : on charge la plus légère qui reste nette
-       sur cet écran (largeur de la carte × densité de pixels, 2 au maximum), la plus petite si la connexion est lente
-     - le téléchargement démarre bien avant l'arrivée à l'écran, pour que la lecture soit immédiate
-     - économie de données ou connexion très lente (2G) : pas de lecture automatique, la photo reste et le bouton lance la vidéo
-     - si un fichier ne peut pas être lu, on essaie la version plus légère, sinon la photo reste affichée */
+  /* Vidéos : lecture en boucle quand elles sont visibles, bouton pause, qualité adaptée à la connexion.
+     - chaque vidéo existe en plusieurs tailles (data-sources : adresse, largeur, poids en octets)
+     - la plus légère démarre tout de suite (et dès 1400 px avant l'écran, pour une lecture immédiate)
+     - pendant ce premier téléchargement, la page mesure le débit réel du visiteur, puis récupère en arrière-plan
+       la version la plus nette que l'écran justifie (largeur de la carte × densité de pixels, 2 au maximum)
+       et qui se télécharge en moins de 6 s à ce débit
+     - la version nette remplace la légère sans à-coup : au bouclage de la vidéo, ou aussitôt si elle est à l'arrêt
+     - économie de données ou 2G : pas de lecture automatique, la photo reste et le bouton lance la vidéo ;
+       en 3G : version légère seulement
+     - si la version nette ne peut pas être lue, on revient à la légère ; si rien ne peut être lu, la photo reste */
   var vids=d.querySelectorAll('video[data-src]');
   var conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection||{};
   var lowData=!!(conn.saveData||/^(slow-2g|2g)$/.test(conn.effectiveType||''));
   var slowNet=lowData||(conn.effectiveType==='3g');
+  var UPGRADE_MAX_S=6;
   function setBtn(v,playing){
     var btn=v.parentNode.querySelector('.vbtn'); if(!btn) return;
     btn.setAttribute('data-state',playing?'playing':'paused');
@@ -1495,30 +1500,88 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
   }
   function sourcesOf(v){
     var list=(v.getAttribute('data-sources')||'').split(',').map(function(s){
-      var p=s.trim().split(/\s+/); return {url:p[0],w:parseInt(p[1],10)||0};
+      var p=s.trim().split(/\s+/); return {url:p[0],w:parseInt(p[1],10)||0,bytes:parseInt(p[2],10)||0};
     }).filter(function(s){ return s.url; }).sort(function(a,b){ return a.w-b.w; });
-    return list.length?list:[{url:v.getAttribute('data-src'),w:0}];
+    return list.length?list:[{url:v.getAttribute('data-src'),w:0,bytes:0}];
   }
-  function pickIndex(v,list){
-    if(slowNet) return 0;
-    var need=(v.clientWidth||360)*Math.min(window.devicePixelRatio||1,2)*0.9;
+  /* rang de la version la plus nette utile sur cet écran */
+  function targetIndex(v,list){
+    var need=(v.clientWidth||360)*Math.min(window.devicePixelRatio||1,2);
     for(var i=0;i<list.length;i++){ if(list[i].w>=need) return i; }
     return list.length-1;
+  }
+  /* rang de la meilleure version (jusqu'à target) qui se télécharge en moins de UPGRADE_MAX_S secondes au débit mesuré (Mb/s) */
+  function bestIndex(list,target,mbps){
+    if(!(mbps>0)) return 0;
+    for(var i=target;i>0;i--){ if(list[i].bytes&&list[i].bytes*8/1e6/mbps<=UPGRADE_MAX_S) return i; }
+    return 0;
   }
   vids.forEach(function(v){
     v.loop=true; v.muted=true; v.defaultMuted=true; v.setAttribute('playsinline',''); v.disablePictureInPicture=true;
     v._manual=false; v._vis=false;
     var btn=v.parentNode.querySelector('.vbtn');
-    var list=sourcesOf(v), idx=-1;
+    var list=sourcesOf(v), cur=-1, pending=null, blobUrl=null, decided=false, noUp=false, last=0, t0=0, tick=null;
+
+    /* débit : part du fichier léger déjà reçue / temps écoulé ; décision une fois le fichier reçu (ou après 5 s) */
+    function speedCheck(){
+      if(decided) return;
+      var b=v.buffered, dur=v.duration, s=(performance.now()-t0)/1000;
+      var f=(b&&b.length&&dur>0&&isFinite(dur))?Math.min(1,b.end(b.length-1)/dur):0;
+      if(f>=.97||(s>=5&&(f>0||v._vis))){
+        decided=true; clearInterval(tick); v.removeEventListener('progress',speedCheck);
+        upgrade(f*list[0].bytes*8/1e6/Math.max(s,.05));
+      }
+    }
+    function watchSpeed(reset){
+      if(decided||noUp||slowNet||list.length<2||!list[0].bytes) return;
+      if(!t0||(reset&&!(v.buffered&&v.buffered.length))) t0=performance.now();
+      if(!tick){ tick=setInterval(speedCheck,250); v.addEventListener('progress',speedCheck); }
+    }
+    /* télécharge la version nette en arrière-plan, puis la met en attente (remplacée au bon moment) */
+    function upgrade(mbps){
+      var bi=bestIndex(list,targetIndex(v,list),mbps);
+      if(noUp||bi<=cur) return;
+      var ctl=window.AbortController?new AbortController():null;
+      var to=setTimeout(function(){ if(ctl) ctl.abort(); },(UPGRADE_MAX_S+3)*1000);
+      fetch(list[bi].url,ctl?{signal:ctl.signal}:{})
+        .then(function(r){ if(!r.ok) throw new Error('http '+r.status); return r.blob(); })
+        .then(function(b){
+          clearTimeout(to); if(noUp) return;
+          pending={url:URL.createObjectURL(b),idx:bi};
+          if(v.paused&&!v._manual) applyPending();
+        })
+        .catch(function(){ clearTimeout(to); });
+    }
+    function applyPending(){
+      if(!pending) return;
+      var p=pending, was=!v.paused, old=blobUrl;
+      pending=null; blobUrl=p.url; cur=p.idx;
+      v.src=p.url; v.load();
+      if(old) URL.revokeObjectURL(old);
+      if(was){ var q=v.play(); if(q&&q.catch) q.catch(function(){ setBtn(v,false); }); }
+      /* garde-fou : si la version nette ne démarre pas, retour à la légère */
+      setTimeout(function(){ if(cur>0&&v._vis&&!v._manual&&v.readyState<2) revertLite(); },6000);
+    }
+    function revertLite(){
+      if(cur<=0) return;
+      noUp=true; pending=null; cur=0;
+      var old=blobUrl; blobUrl=null; v.src=list[0].url; v.load();
+      if(old) URL.revokeObjectURL(old);
+      if(v._vis&&!v._manual) play();
+    }
     function ensureSrc(){
       if(v.getAttribute('src')) return;
-      idx=pickIndex(v,list);
-      v.preload='auto'; v.src=list[idx].url; v.load();
+      cur=0; v.preload='auto'; v.src=list[0].url; v.load(); watchSpeed(false);
     }
-    function play(){ ensureSrc(); var p=v.play(); if(p&&p.then){ p.then(function(){setBtn(v,true);},function(){setBtn(v,false);}); } }
-    v.addEventListener('error',function(){
-      if(idx>0){ idx--; v.src=list[idx].url; v.load(); if(v._vis&&!v._manual) play(); }
-      else setBtn(v,false);
+    function play(){
+      applyPending(); ensureSrc(); watchSpeed(true);
+      var p=v.play(); if(p&&p.then){ p.then(function(){setBtn(v,true);},function(){setBtn(v,false);}); }
+    }
+    v.addEventListener('error',function(){ if(cur>0) revertLite(); else setBtn(v,false); });
+    /* bouclage de la lecture : bon moment pour passer à la version nette */
+    v.addEventListener('timeupdate',function(){
+      if(pending&&!v.paused&&v.currentTime<last-.5) applyPending();
+      last=v.currentTime;
     });
     if(btn){ btn.addEventListener('click',function(){ if(v.paused){ v._manual=false; play(); } else { v._manual=true; v.pause(); setBtn(v,false); } }); }
     if(reduce||lowData){ setBtn(v,false); return; }
