@@ -7,4 +7,4 @@ SITE DE JÉRÉMY MERCIER - À DÉPOSER CHEZ L'HÉBERGEUR
 3. Activez le certificat HTTPS (SSL) du domaine.
 
 Aucune base de données, aucun PHP, aucun outil à installer : ce sont de simples fichiers.
-La réservation d'appel utilise Calendly (calendly.com/mercier-naruto/30min).
+La réservation d'appel utilise Calendly (calendly.com/mercier-naruto/5min).
