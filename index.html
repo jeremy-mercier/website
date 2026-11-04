@@ -875,7 +875,7 @@ summary:active::after{scale:.9}
 .hero-where .ic{width:20px;height:20px;color:var(--gold)}
 .hero-trio{margin-top:-4px}
 
-/* ---------- Mes coachings : deux cartes vidéo, un panneau de détail ----------
+/* ---------- Mes coachings : trois cartes (voir V21), un panneau de détail ----------
    Ordinateur : cartes sur la 1re ligne, panneau pleine largeur dessous.
    Mobile (≤ 720px) : chaque panneau s'ouvre sous sa carte. */
 .anchor-alias{position:absolute;top:0}
@@ -1001,6 +1001,33 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
   .nav .btn .ic:last-child{display:none}
 }
 @media (prefers-reduced-motion:reduce){.roll span:nth-child(1){translate:0 0}}
+
+/* ---------- V21 : trois offres (Coaching individuel, Team building, Intervention en entreprise) ----------
+   Ordinateur (> 1080px) : trois cartes alignées sur la 1re ligne, panneau de détail pleine largeur dessous.
+   Les cartes partagent les lignes de la grille (subgrid) : titres, visuels et boutons restent alignés,
+   même quand un titre passe sur deux lignes.
+   Tablette et mobile (≤ 1080px, même seuil que l'ancienne grille à 3 formules) : cartes empilées,
+   chaque panneau s'ouvre sous sa carte. */
+.sess.offers-pick{grid-template-columns:repeat(3,minmax(0,1fr));max-width:1180px;row-gap:16px}
+.offers-pick .v1{grid-column:1;grid-row:1/span 3}
+.offers-pick .v2{grid-column:2;grid-row:1/span 3}
+.offers-pick .v3{grid-column:3;grid-row:1/span 3}
+.offers-pick .odetail{grid-row:4;margin-top:12px}
+.offers-pick .ocard{display:grid;grid-template-rows:subgrid;row-gap:16px}
+.vcard.v3{background:var(--sky);border-radius:48px 16px 48px 48px}
+.odetail{--nx:16.6%}
+.odetail.od-2{--nx:50%}
+.odetail.od-3{--nx:83.4%;background:var(--sky)}
+@media (max-width:1080px){
+  .sess.offers-pick{grid-template-columns:1fr;max-width:460px}
+  .offers-pick .v1,.offers-pick .v2,.offers-pick .v3,.offers-pick .odetail{grid-column:auto;grid-row:auto}
+  .offers-pick .odetail{margin-top:0}
+  .offers-pick .ocard{display:flex}
+  .odetail,.odetail.od-2,.odetail.od-3{--nx:50%;border-radius:32px}
+  .od-grid{grid-template-columns:1fr}
+  .ocard-btn{flex:1 1 auto}
+  .od-cta .btn{width:100%;padding-inline:16px}
+}
 </style>
 </head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -1033,6 +1060,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
   <symbol id="d-lotus" viewBox="0 0 64 64"><g stroke="#0a3922" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M32 10c7 8 9 17 0 30-9-13-7-22 0-30z" fill="#fff"/><path d="M31 40C20 40 11 34 7 24c11-1 20 3 24 16z" fill="#d2f2e3"/><path d="M33 40c11 0 20-6 24-16-11-1-20 3-24 16z" fill="#d2f2e3"/><path d="M10 47c6 6 14 9 22 9s16-3 22-9" fill="none"/></g></symbol>
   <symbol id="d-bolt" viewBox="0 0 64 64"><g stroke="#0a3922" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M37 5L13 37h15l-5 22 28-35H36z" fill="#e6c887"/><path d="M50 10l3-3M54 18l5-1M12 18L8 15" fill="none"/></g></symbol>
   <symbol id="d-people" viewBox="0 0 64 64"><g stroke="#0a3922" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="25" r="6" fill="#fff"/><circle cx="32" cy="17" r="6.5" fill="#fff"/><circle cx="48" cy="25" r="6" fill="#fff"/><path d="M5 50c0-9 5-15 11-15s11 6 11 15z" fill="#5fd4ef"/><path d="M21 52c0-10 5-17 11-17s11 7 11 17z" fill="#ff643b"/><path d="M37 50c0-9 5-15 11-15s11 6 11 15z" fill="#e6c887"/></g></symbol>
+  <symbol id="d-office" viewBox="0 0 64 64"><g stroke="#0a3922" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 57V12a3 3 0 0 1 3-3h20a3 3 0 0 1 3 3v45z" fill="#5fd4ef"/><path d="M40 57V25h9a3 3 0 0 1 3 3v29z" fill="#e6c887"/><path d="M20 17h4M30 17h4M20 25h4M30 25h4M20 33h4M30 33h4M20 41h4M30 41h4M44 33h4M44 41h4" fill="none"/><path d="M23 57v-8h8v8" fill="#fff"/><path d="M8 57h50" fill="none"/></g></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
@@ -1169,6 +1197,30 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
         </div>
         <div class="od-foot">
           <p class="flat od-devis"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span><b>Sur devis</b> · Chaque accompagnement se construit avec vous.</span></p>
+          <div class="od-cta">
+            <a class="btn btn-primary" href="#rdv">Réserver mon appel de 5&nbsp;min <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a class="link-arrow" href="#quiz">Pas sûr&nbsp;? Faire le test d’1&nbsp;minute <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <article class="vwrap vcard v3 ocard" id="intervention-entreprise" data-reveal="scale" style="--d:.3s">
+        <div class="vhead"><span class="vh-ico" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#d-office"/></svg></span><div><h3>Intervention <span class="serif">en entreprise</span></h3><p class="vfor flat"><svg class="ic" aria-hidden="true"><use href="#i-brief"/></svg>Pour dirigeants et&nbsp;RH</p></div></div>
+        <div class="vid">
+          <!-- REMPLACER PAR VIDEO/PHOTO QUAND DISPONIBLE -->
+        </div>
+        <div class="ocard-foot">
+          <button class="btn btn-secondary ocard-btn" type="button" aria-expanded="false" aria-controls="detail-intervention-entreprise"><svg class="ic i-plus" aria-hidden="true"><use href="#i-plus"/></svg><svg class="ic i-minus" aria-hidden="true"><use href="#i-minus"/></svg><span class="ocard-lbl">Voir le détail</span><span class="sr-only"> de l’intervention en entreprise</span></button>
+          <span class="flat ocard-sel"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Sélectionné</span>
+        </div>
+      </article>
+      <div class="odetail od-3" id="detail-intervention-entreprise" role="region" aria-label="Détail de l’intervention en entreprise" hidden>
+        <p class="od-who"><span class="od-h">Pour qui</span>Dirigeants et responsables RH, pour leurs équipes</p>
+        <div class="od-grid">
+          <div class="od-blk"><h4 class="od-h">Caractéristiques</h4><ul><li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Du FitBoxing&nbsp;: un mélange de boxe et de fitness</li><li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Directement dans votre entreprise</li><li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Des séances régulières</li><li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Le team building est un temps fort. Ici, on s’installe dans la durée</li></ul></div>
+          <div class="od-blk od-res"><h4 class="od-h">Vos résultats</h4><ul><li><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg>Relâcher la pression</li><li><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg>Récupérer de l’énergie</li><li><svg class="ic" aria-hidden="true"><use href="#i-star"/></svg>Renforcer la cohésion d’équipe</li></ul></div>
+        </div>
+        <div class="od-foot">
+          <p class="flat od-devis"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><span><b>Sur devis</b> · Nombre de séances et durée définis avec vous.</span></p>
           <div class="od-cta">
             <a class="btn btn-primary" href="#rdv">Réserver mon appel de 5&nbsp;min <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
             <a class="link-arrow" href="#quiz">Pas sûr&nbsp;? Faire le test d’1&nbsp;minute <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -1602,8 +1654,8 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
   });
 
   /* Mes coachings : chaque carte ouvre son détail, un seul à la fois.
-     #individuel et #team-building ouvrent l'offre ; l'adresse suit l'offre ouverte pour pouvoir la copier. */
-  var OFFERS=['individuel','team-building'];
+     #individuel, #team-building et #intervention-entreprise ouvrent l'offre ; l'adresse suit l'offre ouverte pour pouvoir la copier. */
+  var OFFERS=['individuel','team-building','intervention-entreprise'];
   function offer(k){ var c=d.getElementById(k); return c&&{card:c,btn:c.querySelector('.ocard-btn'),panel:d.getElementById('detail-'+k)}; }
   function jump(el,block,instant){
     if(instant){ root.style.scrollBehavior='auto'; el.scrollIntoView({block:block}); root.style.scrollBehavior=''; }
