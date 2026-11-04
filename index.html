@@ -1028,6 +1028,20 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
   .ocard-btn{flex:1 1 auto}
   .od-cta .btn{width:100%;padding-inline:16px}
 }
+
+/* Visuel vectoriel de l'intervention en entreprise, en attendant une vidéo ou une photo.
+   Il remplit le conteneur .vid comme les vidéos des autres cartes (même ratio, même arrondi, mêmes étiquettes) :
+   pour le remplacer, il suffit de changer le contenu de ce .vid (repère « REMPLACER PAR VIDEO/PHOTO » dans le HTML). */
+.vart{position:absolute;inset:0;background:radial-gradient(75% 52% at 50% 50%,rgba(29,191,115,.36),transparent 70%),linear-gradient(165deg,var(--forest-2),var(--forest-deep))}
+.vart-svg{position:absolute;inset:0;width:100%;height:100%}
+.va-ring{fill:none;stroke:var(--gold);stroke-opacity:.55;stroke-width:2;stroke-dasharray:5 9;transform-box:fill-box;transform-origin:center;animation:spin2 40s linear infinite}
+.va-glove{transform-box:fill-box;transform-origin:center;animation:punch 3.2s ease-in-out infinite}
+.vtag.va-tag{background:#fff;color:var(--forest)}
+.va-tag .ic{color:var(--leaf-deep)}
+.va-top{position:absolute;left:14px;top:14px}
+.va-bot{flex-wrap:wrap;gap:8px}
+@media (max-width:720px){.va-top{left:8px;top:10px}}
+@media (prefers-reduced-motion:reduce){.va-ring,.va-glove{animation:none}}
 </style>
 </head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -1207,6 +1221,21 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
         <div class="vhead"><span class="vh-ico" aria-hidden="true"><svg viewBox="0 0 64 64"><use href="#d-office"/></svg></span><div><h3>Intervention <span class="serif">en entreprise</span></h3><p class="vfor flat"><svg class="ic" aria-hidden="true"><use href="#i-brief"/></svg>Pour dirigeants et&nbsp;RH</p></div></div>
         <div class="vid">
           <!-- REMPLACER PAR VIDEO/PHOTO QUAND DISPONIBLE -->
+          <div class="vart" role="img" aria-label="Illustration : séances de FitBoxing régulières dans une entreprise">
+            <svg class="vart-svg" viewBox="0 0 300 400" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
+              <circle class="va-ring" cx="150" cy="205" r="112"/>
+              <g fill="#e6c887" opacity=".85"><path d="M62 128l2.6 7.4 7.4 2.6-7.4 2.6-2.6 7.4-2.6-7.4-7.4-2.6 7.4-2.6z"/><path d="M76 168l1.6 4.4 4.4 1.6-4.4 1.6-1.6 4.4-1.6-4.4-4.4-1.6 4.4-1.6z"/><path d="M232 238l2 5.6 5.6 2-5.6 2-2 5.6-2-5.6-5.6-2 5.6-2z"/></g>
+              <ellipse cx="150" cy="296" rx="84" ry="8" fill="#000" opacity=".22"/>
+              <g transform="translate(64.2 76.6) scale(2.6)" stroke="#0a3922" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 57V12a3 3 0 0 1 3-3h20a3 3 0 0 1 3 3v45z" fill="#5fd4ef"/><path d="M40 57V25h9a3 3 0 0 1 3 3v29z" fill="#e6c887"/><path d="M20 17h4M30 17h4M20 25h4M30 25h4M20 33h4M30 33h4M20 41h4M30 41h4M44 33h4M44 41h4" fill="none"/></g>
+              <g transform="translate(76.4 175.9) scale(2.3)" stroke="#0a3922" stroke-width="1.13" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="25" r="6" fill="#fff"/><circle cx="32" cy="17" r="6.5" fill="#fff"/><circle cx="48" cy="25" r="6" fill="#fff"/><path d="M5 50c0-9 5-15 11-15s11 6 11 15z" fill="#5fd4ef"/><path d="M21 52c0-10 5-17 11-17s11 7 11 17z" fill="#ff643b"/><path d="M37 50c0-9 5-15 11-15s11 6 11 15z" fill="#e6c887"/></g>
+              <path d="M197 84h-10M195 96h-14M197 108h-10" fill="none" stroke="#e6c887" stroke-width="2.6" stroke-linecap="round"/>
+              <circle cx="238" cy="96" r="40" fill="#1dbf73" fill-opacity=".22"/>
+              <circle cx="238" cy="96" r="31" fill="#1dbf73"/>
+              <g class="va-glove"><g transform="translate(216 70.8) scale(.72)" stroke="#0a3922" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 30c0-11 6-18 17-18h6c9 0 15 5 15 14v8c0 9-6 15-15 15H31c-9 0-15-5-15-14z" fill="#ff643b"/><path d="M16 31c-5 0-9 3-9 7s4 7 9 7" fill="#ff643b"/><rect x="27" y="49" width="23" height="9" rx="2.5" fill="#e6c887"/><path d="M36 19c5 0 9 1 12 5" fill="none" stroke="#fff"/><path d="M32 33h14" fill="none"/></g></g>
+            </svg>
+            <span class="tag vtag va-tag va-top"><svg class="ic" aria-hidden="true"><use href="#i-brief"/></svg>Dans votre entreprise</span>
+            <div class="vlabel va-bot"><span class="tag vtag va-tag"><svg class="ic" aria-hidden="true"><use href="#i-glove"/></svg>FitBoxing</span><span class="tag vtag va-tag"><svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg>Régulier</span></div>
+          </div>
         </div>
         <div class="ocard-foot">
           <button class="btn btn-secondary ocard-btn" type="button" aria-expanded="false" aria-controls="detail-intervention-entreprise"><svg class="ic i-plus" aria-hidden="true"><use href="#i-plus"/></svg><svg class="ic i-minus" aria-hidden="true"><use href="#i-minus"/></svg><span class="ocard-lbl">Voir le détail</span><span class="sr-only"> de l’intervention en entreprise</span></button>
