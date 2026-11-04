@@ -1037,3 +1037,50 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
 .va-bot{flex-wrap:wrap;gap:8px}
 @media (max-width:720px){.va-top{left:8px;top:10px}}
 @media (prefers-reduced-motion:reduce){.va-ring,.va-glove{animation:none}}
+
+/* ---------- V22 : pages offres (/coaching-individuel-boxe-lyon/, /team-building-boxe-lyon/, /intervention-entreprise-boxe-lyon/) ----------
+   Mêmes composants que l'accueil : bandes alternées, carte de détail (.odetail), cartes d'études (.fxc), FAQ en tuiles. */
+.nav ul a[aria-current="page"]{background:var(--sage)}
+.ocard-foot{align-content:flex-start}
+.ocard-more{min-height:36px}
+/* Menu : 3 offres + Coach + FAQ ; plus étroit, les 3 offres seules ; tablette et mobile, liens dans le pied de page */
+@media (max-width:1240px){.nav ul li.nav-sec{display:none}.nav ul{gap:2px}.nav ul a{padding:8px 12px;font-size:.92rem}}
+@media (max-width:1080px){.nav ul{display:none}}
+.foot{grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,1fr))}
+@media (max-width:900px){.foot{grid-template-columns:1fr}}
+.sub-hero{padding-block:clamp(12px,2vw,28px) clamp(80px,10vw,140px)}
+.crumbs{margin-bottom:clamp(6px,1.4vw,18px)}
+.crumbs ol{display:flex;flex-wrap:wrap;align-items:center;gap:0 10px;font-size:.92rem;font-weight:600;color:var(--mute-on-dark)}
+.crumbs li{display:inline-flex;align-items:center;gap:10px;min-height:44px}
+.crumbs li+li::before{content:"›";color:var(--gold);font-weight:700}
+.crumbs a{color:#fff;text-underline-offset:4px}
+.crumbs a:hover{text-decoration-thickness:2px}
+.sub-hero h1{font-size:clamp(2.3rem,4.4vw,3.8rem);line-height:1.02}
+.sub-hero .hero-left{gap:clamp(16px,2.2vw,26px)}
+.sub-hero .lead{max-width:46ch;font-size:1.02rem}
+.sub-vis{width:100%;max-width:380px;justify-self:center}
+.sub-vis .vid{aspect-ratio:3/4;border-radius:36px;border:0;box-shadow:0 0 0 3px var(--gold),0 30px 60px -30px rgba(0,0,0,.6)}
+.od-static{animation:none}
+.od-static::before{display:none}
+h3.od-h{line-height:1.55}
+.sub-block{margin-top:clamp(28px,4vw,48px);display:grid;gap:16px}
+.sub-h3{color:var(--forest)}
+.sub-steps{max-width:640px}
+.sub-steps li{color:var(--forest)}
+.goals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.goals li{display:grid;gap:4px;padding:16px 20px;border-radius:24px;background:var(--sage);color:var(--graphite);font-size:1rem;line-height:1.4}
+.goals li:nth-child(2){background:var(--cream)}.goals li:nth-child(3){background:var(--lilac)}.goals li:nth-child(4){background:var(--sky)}
+.goals b{color:var(--forest);font-size:1.05rem}
+.sub-p{color:var(--graphite);max-width:70ch}
+.sub-p a{color:var(--forest);font-weight:700;text-underline-offset:4px}
+.fx.fx-2{grid-template-columns:repeat(2,minmax(0,1fr));max-width:900px}
+.sub-note{max-width:70ch;margin:24px auto 0;text-align:center;font-size:.95rem;color:var(--mute-on-dark)}
+.sub-note a{color:var(--gold);font-weight:600}
+.sub-last{padding-bottom:clamp(64px,8vw,110px)}
+.rel{margin-top:clamp(40px,5vw,64px);display:grid;gap:16px;justify-items:start}
+.rel-h{font-size:clamp(1.5rem,2.6vw,2rem)}
+@media (max-width:900px){
+  .fx.fx-2{grid-template-columns:1fr;max-width:560px}
+  .sub-vis{max-width:340px}
+}
+@media (max-width:560px){.goals{grid-template-columns:1fr}.rel .btn{width:100%}}

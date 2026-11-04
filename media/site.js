@@ -250,6 +250,16 @@
     a.addEventListener('click',function(){ var src=d.getElementById('sources'); if(src) src.open=true; });
   });
   openFromHash();
+  /* Arrivée depuis une autre page avec une ancre (#qui, #faq, #mentions, #etude-2…) :
+     on recale le défilement une fois la page chargée (polices et images déplacent la mise en page) */
+  (function(){
+    var id=location.hash.slice(1); if(!id||id==='rdv'||OFFERS.indexOf(id)>-1) return;
+    function go(){
+      var el=d.getElementById(id); if(!el) return;
+      root.style.scrollBehavior='auto'; el.scrollIntoView({block:'start'}); root.style.scrollBehavior='';
+    }
+    if(d.readyState==='complete') go(); else window.addEventListener('load',go);
+  })();
 
   /* Chiffres qui montent */
   var cnt=d.querySelectorAll('.fx-n[data-count]');
