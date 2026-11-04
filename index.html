@@ -1277,7 +1277,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
         <p class="fx-t">des 16 travaux passés en revue sur la boxe montrent moins de stress ou un meilleur moral chez les pratiquants.</p>
         <p class="flat fx-scope"><svg class="ic" aria-hidden="true"><use href="#i-glove"/></svg>Études menées directement sur la boxe</p>
         <p class="fx-s"><span class="flat lvl">Niveau de preuve&nbsp;: prometteur</span><a class="link-arrow study" href="#etude-1">Étude 1 <svg class="ic down" aria-hidden="true"><use href="#i-arrow"/></svg></a></p>
-        <p class="flat fx-for"><small>Offres concernées&nbsp;:</small>Coaching individuel · Team building</p>
+        <p class="flat fx-for"><small>Offres concernées&nbsp;:</small>Coaching individuel · Team building · Intervention en entreprise</p>
       </article>
       <article class="fxc c3" data-reveal style="--d:.08s">
         <div class="fx-head"><svg class="ic fx-ic" aria-hidden="true"><use href="#i-target"/></svg><h3>Évoluer</h3></div>
@@ -1299,7 +1299,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
         <p class="fx-t">Bouger au même rythme que les autres&nbsp;: on coopère davantage et le groupe se rapproche.</p>
         <p class="flat fx-scope"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>Observé en marchant, chantant ou ramant en rythme</p>
         <p class="fx-s"><span class="flat lvl">Niveau de preuve&nbsp;: expériences contrôlées</span><a class="link-arrow study" href="#etude-4">Étude 4 <svg class="ic down" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="link-arrow study" href="#etude-5">Étude 5 <svg class="ic down" aria-hidden="true"><use href="#i-arrow"/></svg></a></p>
-        <p class="flat fx-for"><small>Offre concernée&nbsp;:</small>Team building</p>
+        <p class="flat fx-for"><small>Offres concernées&nbsp;:</small>Team building · Intervention en entreprise</p>
       </article>
     </div>
 
@@ -1386,6 +1386,10 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
       <details class="q">
         <summary>Où ont lieu les séances ?</summary>
         <div class="ans">Je viens à vous, à Lyon et dans la métropole&nbsp;: dans vos locaux, sans trajet pour vos équipes, ou hors bureau pour changer d’air. Le lieu se précise à l’appel.</div>
+      </details>
+      <details class="q">
+        <summary>Pouvez-vous intervenir régulièrement dans notre entreprise&nbsp;?</summary>
+        <div class="ans">Oui. J’anime du FitBoxing, un mélange de boxe et de fitness, dans votre entreprise&nbsp;: pour relâcher la pression, récupérer de l’énergie et renforcer la cohésion d’équipe. Le nombre de séances et leur durée se décident avec les personnes qui décident dans votre entreprise, lors de l’appel de 5&nbsp;minutes. Tout est sur devis.</div>
       </details>
       <details class="q">
         <summary>Suis-je en sécurité ?</summary>
@@ -1785,6 +1789,12 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
     };
     function ic(n){ return ICON[n]||'<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-'+n+'"/></svg>'; }
     var FR=[['pression','Pression'],['temps','Manque de temps'],['fatigue','Fatigue mentale'],['equipe','Équipe tendue']];
+    /* Dernière question des parcours 1 à 3 : les trois offres. Pour l'intervention en entreprise, « Mon aide » affiche
+       ses propres étapes (steps) : séances et durée se décident avec l'entreprise, rien n'est fixé à l'avance. */
+    var O4=[{i:'user',l:'Seul à la barre',rec:'Coaching individuel',need:'Individuel'},
+      {i:'users',l:'Avec mon équipe, pour un temps fort',rec:'Team building',need:'Team building'},
+      {i:'brief',l:'Avec mon équipe, dans la durée',rec:'Intervention en entreprise',need:'Intervention en entreprise',
+       steps:['Du FitBoxing&nbsp;: un mélange de boxe et de fitness','Directement dans votre entreprise, de façon régulière','Nombre de séances et durée définis avec vous']}];
     var P=[
     /* ---------- 0 : pression ---------- */
     {name:'Sous <span class="serif">pression</span>',icon:'pression',
@@ -1803,7 +1813,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
       {i:'trend',l:'Une charge qui ne s’arrête jamais',c:'Des séances courtes et régulières, calées sur vos pics de charge',pro:'Une charge mieux encaissée dans la durée'}
      ],
      q4:'Vous avancez <span class="serif">comment</span>&nbsp;?',
-     o4:[{i:'user',l:'Seul à la barre',rec:'Coaching individuel',need:'Individuel'},{i:'users',l:'Avec mon équipe',rec:'Team building',need:'Team building'}]},
+     o4:O4},
     /* ---------- 1 : temps ---------- */
     {name:'Agenda <span class="serif">saturé</span>',icon:'temps',
      q2:'Qu’est-ce qui <span class="serif">dévore</span> votre temps&nbsp;?',
@@ -1821,7 +1831,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
       {i:'shield',l:'Sur site, dans mes locaux',c:'Je viens à vous&nbsp;: aucun trajet, aucun temps perdu',pro:'Zéro temps de trajet perdu',slot:'Sur site'}
      ],
      q4:'Vous avancez <span class="serif">comment</span>&nbsp;?',
-     o4:[{i:'user',l:'Seul à la barre',rec:'Coaching individuel',need:'Individuel'},{i:'users',l:'Avec mon équipe',rec:'Team building',need:'Team building'}]},
+     o4:O4},
     /* ---------- 2 : fatigue ---------- */
     {name:'Batterie <span class="serif">faible</span>',icon:'fatigue',
      q2:'Comment la fatigue <span class="serif">se voit</span>-elle&nbsp;?',
@@ -1839,7 +1849,7 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
       {i:'cross',l:'Une gêne me freine',c:'On adapte les gestes, avec l’avis de votre médecin si besoin',pro:'Une activité adaptée à votre corps'}
      ],
      q4:'Vous avancez <span class="serif">comment</span>&nbsp;?',
-     o4:[{i:'user',l:'Seul à la barre',rec:'Coaching individuel',need:'Individuel'},{i:'users',l:'Avec mon équipe',rec:'Team building',need:'Team building'}]},
+     o4:O4},
     /* ---------- 3 : équipe ---------- */
     {name:'Équipe sous <span class="serif">tension</span>',icon:'equipe',
      q2:'Qu’<span class="serif">observez</span>-vous dans l’équipe&nbsp;?',
@@ -1902,10 +1912,10 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
     function li(t){ return '<li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>'+t+'</li>'; }
     function result(){
       var p=P[ans[0]], o2=p.o2[ans[1]], o3=p.o3[ans[2]], o4=p.o4[ans[3]];
-      var team=o4.need!=='Individuel';
+      var team=o4.need!=='Individuel', steps=o4.steps||[o2.a,o2.b,o3.c];
       var h='<h2 class="qz-q" id="qzQ" tabindex="-1">Votre programme <span class="serif">sur mesure</span></h2><div class="qz-grid">'
       +'<article class="qc" style="--d:.05s"><p class="qh"><span class="fnum">1</span>Votre frein</p><div class="qic">'+ic(p.icon)+'</div><h3 class="qname">'+p.name+'</h3><p class="sent">'+o2.sent+'.</p><div class="qtags"><span class="tag">'+o2.l+'</span><span class="tag">'+o3.l+'</span></div></article>'
-      +'<article class="qc" style="--d:.25s"><p class="qh"><span class="fnum">2</span>Mon aide</p><ol class="qsteps"><li>'+o2.a+'</li><li>'+o2.b+'</li><li>'+o3.c+'</li></ol><span class="tag qrec"><svg class="ic" aria-hidden="true"><use href="#'+(team?'i-users':'i-user')+'"/></svg>'+o4.rec+'</span>'+(o3.slot?'<span class="tag qrec alt"><svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg>Créneau&nbsp;: '+o3.slot+'</span>':'')+'</article>'
+      +'<article class="qc" style="--d:.25s"><p class="qh"><span class="fnum">2</span>Mon aide</p><ol class="qsteps"><li>'+steps.join('</li><li>')+'</li></ol><span class="tag qrec"><svg class="ic" aria-hidden="true"><use href="#'+(team?'i-users':'i-user')+'"/></svg>'+o4.rec+'</span>'+(o3.slot?'<span class="tag qrec alt"><svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg>Créneau&nbsp;: '+o3.slot+'</span>':'')+'</article>'
       +'<article class="qc" id="qzGain" style="--d:.45s"><p class="qh"><span class="fnum">3</span>Vos gains</p><div class="meters">'
       +o2.m.map(function(m,k){ return '<div class="mt"><span>'+m[0]+'</span><span class="bar"><i style="--from:18%;--to:'+Math.round(m[1]*100)+'%;--dl:'+(.9+k*.25)+'s"></i></span></div>'; }).join('')
       +'</div><div class="gl2"><div><b>Au quotidien</b><ul>'+o2.day.map(li).join('')+'</ul></div><div><b>Dans votre vie pro</b><ul>'+o2.pro.concat([o3.pro]).map(li).join('')+'</ul></div></div></article></div>'
