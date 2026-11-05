@@ -1047,6 +1047,8 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
 @media (max-width:1240px){.nav ul li.nav-sec{display:none}.nav ul{gap:2px}.nav ul a{padding:8px 12px;font-size:.92rem}}
 @media (max-width:1080px){.nav ul{display:none}}
 .foot{grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,1fr))}
+.foot ul.foot-social{display:flex;flex-wrap:wrap;gap:4px 20px;margin-top:10px}
+.foot-social a{text-decoration:underline;text-underline-offset:4px;color:#fff;font-weight:600}
 @media (max-width:900px){.foot{grid-template-columns:1fr}}
 .sub-hero{padding-block:clamp(12px,2vw,28px) clamp(80px,10vw,140px)}
 .crumbs{margin-bottom:clamp(6px,1.4vw,18px)}
