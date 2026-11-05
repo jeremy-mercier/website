@@ -1005,14 +1005,15 @@ details.src summary:hover::after{background:#fff;color:var(--forest)}
    chaque panneau s'ouvre sous sa carte. */
 .sess.offers-pick{grid-template-columns:repeat(3,minmax(0,1fr));max-width:1180px;row-gap:16px}
 .offers-pick .v1{grid-column:1;grid-row:1/span 3}
-.offers-pick .v2{grid-column:2;grid-row:1/span 3}
-.offers-pick .v3{grid-column:3;grid-row:1/span 3}
+/* Ordre des offres : coaching individuel (v1), intervention en entreprise (v3), team building (v2) */
+.offers-pick .v3{grid-column:2;grid-row:1/span 3}
+.offers-pick .v2{grid-column:3;grid-row:1/span 3}
 .offers-pick .odetail{grid-row:4;margin-top:12px}
 .offers-pick .ocard{display:grid;grid-template-rows:subgrid;row-gap:16px}
 .vcard.v3{background:var(--sky);border-radius:48px 16px 48px 48px}
 .odetail{--nx:16.6%}
-.odetail.od-2{--nx:50%}
-.odetail.od-3{--nx:83.4%;background:var(--sky)}
+.odetail.od-3{--nx:50%;background:var(--sky)}
+.odetail.od-2{--nx:83.4%}
 @media (max-width:1080px){
   .sess.offers-pick{grid-template-columns:1fr;max-width:460px}
   .offers-pick .v1,.offers-pick .v2,.offers-pick .v3,.offers-pick .odetail{grid-column:auto;grid-row:auto}

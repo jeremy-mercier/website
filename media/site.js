@@ -290,9 +290,9 @@
     /* Dernière question des parcours 1 à 3 : les trois offres. Pour l'intervention en entreprise, « Mon aide » affiche
        ses propres étapes (steps) : séances et durée se décident avec l'entreprise, rien n'est fixé à l'avance. */
     var O4=[{i:'user',l:'Seul à la barre',rec:'Coaching individuel',need:'Individuel'},
-      {i:'users',l:'Avec mon équipe, pour un temps fort',rec:'Team building',need:'Team building'},
       {i:'brief',l:'Avec mon équipe, dans la durée',rec:'Intervention en entreprise',need:'Intervention en entreprise',
-       steps:['Du FitBoxing&nbsp;: un mélange de boxe et de fitness','Directement dans votre entreprise, de façon régulière','Nombre de séances et durée définis avec vous']}];
+       steps:['Du FitBoxing&nbsp;: un mélange de boxe et de fitness','Directement dans votre entreprise, de façon régulière','Nombre de séances et durée définis avec vous']},
+      {i:'users',l:'Avec mon équipe, pour un temps fort',rec:'Team building',need:'Team building'}];
     var P=[
     /* ---------- 0 : pression ---------- */
     {name:'Sous <span class="serif">pression</span>',icon:'pression',

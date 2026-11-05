@@ -5,8 +5,10 @@ Chaque commit poussé sur main est mis en ligne automatiquement (quelques minute
 
 Contenu :
 - index.html : accueil (offres, quiz, FAQ, informations légales, page de réservation #rdv).
-- coaching-individuel-boxe-lyon/, team-building-boxe-lyon/, intervention-entreprise-boxe-lyon/ :
-  une page par offre (index.html dans chaque dossier).
+- coaching-individuel-boxe-lyon/, intervention-entreprise-boxe-lyon/, team-building-boxe-lyon/ :
+  une page par offre (index.html dans chaque dossier). Ordre des offres partout :
+  coaching individuel, intervention en entreprise, team building. L'offre s'appelle
+  « Intervention en entreprise » ; « FitBoxing » sert seulement à l'expliquer.
 - media/site.css et media/site.js : style et script communs à toutes les pages.
 - media/ : polices, photos, vidéos, image de partage (og-image.jpg), icônes.
 - sitemap.xml, robots.txt, favicon.ico, CNAME (nom de domaine).
