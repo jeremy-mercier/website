@@ -10,14 +10,19 @@ Contenu :
   coaching individuel, intervention en entreprise, team building. L'offre s'appelle
   « Intervention en entreprise » ; « FitBoxing » sert seulement à l'expliquer.
 - media/site.css et media/site.js : style et script communs à toutes les pages.
-- media/ : polices, photos, vidéos, image de partage (og-image.jpg), icônes.
-- sitemap.xml, robots.txt, favicon.ico, CNAME (nom de domaine).
+- media/ : polices, photos, vidéos, image de partage (og-image.jpg).
+- sitemap.xml, robots.txt, CNAME (nom de domaine).
+- Icônes du site (photo de profil), à la racine : favicon.ico (16, 32, 48 px), favicon-48x48.png,
+  favicon-96x96.png, favicon-192x192.png, apple-touch-icon.png (180 px), icon-512.png
+  (icon-512.png sert aussi de logo dans les données structurées de l'accueil).
 
 À savoir :
 - Chaque page contient des données structurées (balise script application/ld+json dans le head).
   La partie FAQPage reprend mot pour mot les questions visibles : si une question ou une réponse
   de FAQ change, mettre à jour le texte au même endroit dans le JSON.
 - Après l'ajout d'une page, l'ajouter aussi au sitemap.xml.
+- Si les icônes changent : remplacer les fichiers, puis passer ?v=2 à ?v=3 dans les balises
+  <link rel="icon"> et <link rel="apple-touch-icon"> du head de chaque page.
 
 Aucune base de données, aucun PHP, aucun outil à installer : ce sont de simples fichiers.
 La réservation d'appel utilise Calendly (calendly.com/mercier-naruto/5min).
