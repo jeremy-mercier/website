@@ -1087,3 +1087,215 @@ h3.od-h{line-height:1.55}
   .sub-vis{max-width:340px}
 }
 @media (max-width:560px){.goals{grid-template-columns:1fr}.rel .btn{width:100%}}
+
+/* ---------- V23 : fonds animés, offres marquantes, photo du coach, pages offres plus contrastées ----------
+   - .bgfx : calque de fond ajouté par site.js dans chaque bande et dans le pied de page ; il dérive lentement
+     (transform seulement) et ne s'anime que lorsqu'il est à l'écran (classe .on). Rien ne bouge si le visiteur
+     a demandé de réduire les animations. */
+.bgfx{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.bgfx i{position:absolute;inset:-18%;will-change:transform;animation:bgflow 30s ease-in-out infinite alternate;animation-play-state:paused}
+.bgfx.on i{animation-play-state:running}
+.dark .bgfx i,footer .bgfx i{background:
+  radial-gradient(36% 32% at 18% 28%,rgba(29,191,115,.22),transparent 70%),
+  radial-gradient(32% 30% at 82% 72%,rgba(230,200,135,.13),transparent 70%),
+  radial-gradient(26% 26% at 62% 12%,rgba(95,212,239,.09),transparent 70%)}
+.light .bgfx i{background:
+  radial-gradient(34% 30% at 14% 24%,rgba(210,242,227,.9),transparent 70%),
+  radial-gradient(30% 28% at 86% 74%,rgba(255,237,232,.85),transparent 70%),
+  radial-gradient(26% 24% at 70% 14%,rgba(204,240,248,.7),transparent 70%)}
+@keyframes bgflow{
+  0%{transform:translate3d(-4%,-3%,0) rotate(0deg) scale(1)}
+  50%{transform:translate3d(4%,2%,0) rotate(5deg) scale(1.06)}
+  100%{transform:translate3d(-2%,4%,0) rotate(-4deg) scale(1.02)}}
+footer{position:relative;overflow:hidden}
+.blob{animation:drift 18s ease-in-out infinite alternate}
+.blob.b2{animation-duration:23s;animation-direction:alternate-reverse}
+
+/* ---------- Accueil : trois offres plus marquantes ---------- */
+#accompagnements .head{max-width:820px}
+#accompagnements .head .lead{max-width:62ch}
+.sess.offers-pick{max-width:1200px;gap:clamp(18px,2.2vw,32px)}
+.offers-pick .ocard{padding:clamp(18px,1.8vw,26px);box-shadow:inset 0 0 0 1.5px rgba(10,57,34,.1),0 34px 70px -34px rgba(10,57,34,.55);transition:translate .45s var(--ease),box-shadow .45s var(--ease)}
+.offers-pick .vcard.v1{background:linear-gradient(160deg,#e6f9ef 0%,#bdeed4 100%)}
+.offers-pick .vcard.v3{background:linear-gradient(160deg,#e5f8fd 0%,#b3e6f4 100%)}
+.offers-pick .vcard.v2{background:linear-gradient(160deg,#fefaec 0%,#f2e0a8 100%)}
+/* liseré lumineux qui tourne autour de chaque carte */
+.offers-pick .ocard::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:3px;pointer-events:none;
+  background:conic-gradient(from var(--ang),transparent 0 52%,var(--gold) 70%,var(--leaf) 80%,transparent 94%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  animation:angle 7s linear infinite;opacity:.85}
+.offers-pick .v3::before{animation-delay:-2.3s}
+.offers-pick .v2::before{animation-delay:-4.6s}
+.offers-pick .ocard:hover{translate:0 -10px;box-shadow:inset 0 0 0 2px rgba(10,57,34,.3),0 46px 80px -36px rgba(10,57,34,.65)}
+.offers-pick .ocard.is-open{box-shadow:0 0 0 4px var(--forest),0 40px 80px -36px rgba(10,57,34,.6)}
+.onum{position:absolute;top:-16px;right:clamp(16px,1.8vw,24px);z-index:2;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:var(--forest);color:var(--gold);font-family:var(--serif);font-style:italic;font-size:1.45rem;line-height:1;box-shadow:0 0 0 4px #fff,0 12px 24px -10px rgba(6,38,22,.6);pointer-events:none}
+.offers-pick .vcard .vhead{padding-right:clamp(40px,4vw,58px)}
+.offers-pick .vcard .vh-ico{width:clamp(52px,4.6vw,64px);box-shadow:0 10px 22px -12px rgba(10,57,34,.55)}
+.offers-pick .vcard .vhead h3{font-size:clamp(1.55rem,2.1vw,2rem);line-height:1}
+.offers-pick .vhead p.vfor{display:inline-flex;width:fit-content;margin-top:10px;padding:6px 12px 6px 10px;border-radius:14px;background:rgba(255,255,255,.75);font-size:.9rem;line-height:1.25}
+.offers-pick .vcard .vid{box-shadow:0 0 0 4px rgba(255,255,255,.9),0 26px 44px -26px rgba(6,38,22,.7)}
+.offers-pick .vcard .vid video{transition:scale .8s var(--ease)}
+.offers-pick .ocard:hover .vid video{scale:1.04}
+.offers-pick .ocard-more{gap:8px;min-height:44px;padding:8px 18px;border-radius:999px;background:var(--forest);color:#fff;text-decoration:none;font-size:.95rem;transition:background .2s var(--ease)}
+.offers-pick .ocard-more:hover{background:var(--forest-2)}
+.offers-pick .ocard-more .ic{color:var(--gold)}
+@media (max-width:1080px){.sess.offers-pick{row-gap:34px}.offers-pick .ocard:hover{translate:0 -4px}}
+
+/* ---------- Coach : portrait principal + petite photo en médaillon ---------- */
+.coach-stage .cs-img{object-position:50% 40%;transform-origin:55% 42%}
+.cs-mini{position:absolute;left:-7%;bottom:-3%;width:32%;aspect-ratio:1;border-radius:50%;overflow:hidden;border:5px solid #fff;background:var(--forest);box-shadow:0 16px 32px -14px rgba(6,38,22,.6);z-index:3;animation:bob 6s ease-in-out infinite}
+.cs-mini img{width:100%;height:100%;object-fit:cover;display:block}
+/* étiquettes déplacées pour laisser voir le visage et les mains : « Compétiteur » au-dessus du médaillon, « Ceinture noire » en haut à droite */
+.coach-stage .medal-tag{top:auto;bottom:31%;left:-9%}
+.coach-stage .medal-tag.m2{top:9%;bottom:auto;left:auto;right:-7%}
+@media (max-width:900px){.cs-mini{left:-4%;width:30%}}
+
+/* ---------- V24 : jonctions propres entre les bandes ----------
+   Les fonds animés s'effacent en haut et en bas de chaque bande : la vague de la bande précédente
+   se raccorde ainsi sur une couleur unie, sans ligne visible. */
+.bgfx,.pg-bg{
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 clamp(90px,12vw,180px),#000 calc(100% - clamp(90px,12vw,180px)),transparent 100%);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 clamp(90px,12vw,180px),#000 calc(100% - clamp(90px,12vw,180px)),transparent 100%)}
+
+/* ---------- Accueil : offres encore plus en avant ---------- */
+/* raccourcis vers les trois offres dès le premier écran */
+.hero-offers{display:grid;gap:10px}
+.ho-k{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.hero-offers ul{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:640px}
+.hero-offers li{display:flex}
+.hero-offers a{flex:1;display:flex;align-items:center;gap:10px;min-height:60px;padding:8px 12px 8px 8px;border-radius:20px;background:#fff;color:var(--forest);font-weight:700;font-size:.98rem;line-height:1.2;text-decoration:none;box-shadow:0 14px 30px -16px rgba(0,0,0,.6);transition:translate .25s var(--ease),box-shadow .25s var(--ease)}
+.hero-offers a:hover{translate:0 -3px;box-shadow:0 20px 36px -16px rgba(0,0,0,.7)}
+.hero-offers a:active{translate:0 0}
+.ho-ic{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--mint)}
+.ho-3 .ho-ic{background:var(--sky)}
+.ho-2 .ho-ic{background:var(--cream)}
+.ho-ic svg{width:72%;height:72%}
+.ho-t{flex:1}
+.ho-ar{width:18px;height:18px;color:var(--leaf-deep);transition:translate .2s var(--ease)}
+.hero-offers a:hover .ho-ar{translate:3px 0}
+@media (max-width:640px){.hero-offers ul{grid-template-columns:1fr}.hero-offers a{min-height:54px;border-radius:999px}}
+
+/* section des offres : plus d'air et un halo de couleur sous chaque carte */
+#accompagnements .head h2{font-size:clamp(2.4rem,5vw,4.2rem)}
+.sess.offers-pick{max-width:1260px;column-gap:clamp(26px,3.4vw,56px);row-gap:clamp(34px,3.4vw,48px);margin-top:clamp(8px,1.6vw,24px)}
+.offers-pick .vcard.v1{--glow:rgba(14,138,80,.6)}
+.offers-pick .vcard.v3{--glow:rgba(18,127,160,.55)}
+.offers-pick .vcard.v2{--glow:rgba(176,134,40,.55)}
+.offers-pick .ocard{box-shadow:inset 0 0 0 1.5px rgba(10,57,34,.1),0 44px 80px -40px var(--glow)}
+.offers-pick .ocard:hover{box-shadow:inset 0 0 0 2px rgba(10,57,34,.25),0 60px 96px -38px var(--glow)}
+.offers-pick .ocard.is-open{box-shadow:0 0 0 4px var(--forest),0 56px 96px -38px var(--glow)}
+
+/* ---------- Coach : médaillon plus grand, cadré sur Jérémy ---------- */
+.cs-mini{width:38%;left:-9%;bottom:-5%;border-width:6px}
+.coach-stage .medal-tag{bottom:36%}
+@media (max-width:900px){.cs-mini{left:-5%;width:36%}}
+
+/* ---------- Pages offres : deuxième partie courte, tournée vers l'appel de 5 min (#programme) ---------- */
+.pg-1{--pg-a:var(--leaf-deep);--pg-soft:var(--mint);--pg-tint:#e7f8ef}
+.pg-2{--pg-a:var(--gold-deep);--pg-soft:#f6ebc6;--pg-tint:#fcf7e4}
+.pg-3{--pg-a:#127fa0;--pg-soft:var(--sky);--pg-tint:#e4f6fb}
+.band.pg{background:linear-gradient(180deg,var(--pg-tint) 0%,#fff 55%,var(--pg-tint) 100%)}
+/* la vague du premier écran prend exactement la couleur du haut de la 2e partie */
+.wave.pgw-1{color:#e7f8ef}
+.wave.pgw-2{color:#fcf7e4}
+.wave.pgw-3{color:#e4f6fb}
+.pg-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.pg-bg i{position:absolute;aspect-ratio:1;border-radius:50%;will-change:transform;animation:pgfloat 20s ease-in-out infinite alternate}
+.pg-bg i:nth-child(1){width:min(56vw,680px);left:-14%;top:4%;background:radial-gradient(circle,var(--pg-soft) 0%,transparent 68%)}
+.pg-bg i:nth-child(2){width:min(46vw,560px);right:-12%;top:30%;background:radial-gradient(circle,rgba(230,200,135,.5) 0%,transparent 68%);animation-duration:25s;animation-direction:alternate-reverse}
+.pg-bg i:nth-child(3){width:min(40vw,480px);left:30%;bottom:-6%;background:radial-gradient(circle,rgba(29,191,115,.2) 0%,transparent 68%);animation-duration:29s}
+@keyframes pgfloat{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(7%,-9%,0) scale(1.14)}}
+.pg-sell{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,80px);align-items:center}
+.pg-main{display:grid;gap:clamp(16px,2vw,22px);justify-items:start}
+.pg-main h2{font-size:clamp(2.2rem,4.2vw,3.6rem);line-height:1.02}
+.pg-for{display:inline-flex;align-items:center;gap:10px;padding:10px 18px 10px 12px;border-radius:999px;background:#fff;color:var(--forest);font-weight:700;font-size:clamp(1rem,1.3vw,1.1rem);line-height:1.3;border:1.5px solid rgba(10,57,34,.08);box-shadow:0 14px 30px -22px rgba(10,57,34,.6)}
+.pg-for .ic{color:var(--pg-a)}
+.pg-wins{display:grid;gap:14px;margin-top:6px}
+.pg-wins li{display:flex;align-items:center;gap:14px;font-size:clamp(1.25rem,2vw,1.6rem);font-weight:700;letter-spacing:-.02em;line-height:1.2;color:var(--forest)}
+.pg-ck{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--forest);color:var(--gold)}
+.pg-ck .ic{width:22px;height:22px;stroke-width:2.6}
+.pg-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.pg-tags li{padding:7px 14px;border-radius:999px;background:var(--pg-soft);color:var(--forest);font-weight:700;font-size:.92rem}
+.pg-call{position:relative;display:grid;gap:14px;justify-items:start;padding:clamp(26px,3.2vw,44px);border-radius:36px;background:radial-gradient(120% 90% at 100% 0%,var(--forest-2) 0%,var(--forest) 45%,var(--forest-deep) 100%);color:#fff;box-shadow:0 40px 80px -36px rgba(6,38,22,.8)}
+.pg-call::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2.5px;pointer-events:none;
+  background:conic-gradient(from var(--ang),transparent 0 50%,var(--gold) 72%,var(--leaf) 84%,transparent 96%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:angle 8s linear infinite}
+.pg-call-k{font-size:12.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.pg-call-big{font-family:var(--serif);font-style:italic;font-size:clamp(3.4rem,5.6vw,5rem);line-height:.9;color:#fff}
+.pg-call-big span{color:var(--gold);font-size:1.4em}
+.pg-call-t{font-size:1.08rem;line-height:1.45;color:var(--mute-on-dark);max-width:32ch}
+.pg-call-list{display:grid;gap:8px}
+.pg-call-list li{display:flex;align-items:center;gap:10px;font-weight:700}
+.pg-call-list .ic{width:20px;height:20px;color:var(--leaf)}
+.pg-call-btn{width:100%;justify-content:center;margin-top:6px;animation:hdrpulse 2.6s ease-out infinite}
+@media (max-width:900px){
+  .pg-sell{grid-template-columns:1fr}
+  .pg-call{justify-items:stretch}
+}
+@media (max-width:560px){
+  .pg-for{border-radius:20px}
+  .pg-wins li{font-size:1.2rem}
+  .pg-call-btn{padding-inline:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  .bgfx i,.pg-bg i,.blob,.cs-mini,.offers-pick .ocard::before,.pg-call::before,.pg-call-btn{animation:none}
+}
+
+/* ---------- V25 : offres de l'accueil en grandes rangées ----------
+   Une rangée par offre : grande vidéo d'un côté (alternée gauche / droite), l'essentiel de l'autre
+   (pour qui, nom, une phrase, 3 résultats, 3 repères) et deux boutons : appel de 5 min + page de l'offre. */
+.offers-head{margin-inline:auto;text-align:center;justify-items:center;max-width:780px}
+.offers-head h2{font-size:clamp(2.4rem,5vw,4.2rem)}
+.offer-rows{display:grid;gap:clamp(30px,4.4vw,60px);max-width:1180px;margin-inline:auto}
+.orow{--t1:#e8faf0;--t2:#c2eed7;--acc:var(--leaf-deep);--glow:rgba(14,138,80,.5);
+  position:relative;display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(24px,4.6vw,76px);align-items:center;
+  padding:clamp(18px,3.2vw,48px);border-radius:52px;background:linear-gradient(135deg,var(--t1) 0%,var(--t2) 100%);
+  box-shadow:inset 0 0 0 1.5px rgba(10,57,34,.08),0 54px 96px -56px var(--glow);scroll-margin-top:96px}
+.orow.o3{--t1:#e8f9fd;--t2:#bde8f4;--acc:#127fa0;--glow:rgba(18,127,160,.5)}
+.orow.o2{--t1:#fffaee;--t2:#f3e3b2;--acc:var(--gold-deep);--glow:rgba(176,134,40,.5)}
+/* liseré lumineux qui fait le tour de chaque rangée */
+.orow::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2.5px;pointer-events:none;
+  background:conic-gradient(from var(--ang),transparent 0 55%,var(--gold) 72%,var(--leaf) 82%,transparent 95%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:angle 9s linear infinite;opacity:.8}
+.orow.o3::before{animation-delay:-3s}
+.orow.o2::before{animation-delay:-6s}
+/* vidéo une fois à gauche, une fois à droite */
+.orow:nth-child(even){grid-template-columns:minmax(0,1.18fr) minmax(0,.82fr)}
+.orow:nth-child(even) .orow-vis{order:2}
+.orow-vis{position:relative;justify-self:center;width:100%;max-width:440px}
+.orow .vid{aspect-ratio:4/5;border-radius:36px;border:0;box-shadow:0 0 0 5px #fff,0 36px 64px -30px rgba(6,38,22,.72)}
+.orow .vid video{transition:scale .9s var(--ease)}
+.orow:hover .vid video{scale:1.04}
+.orow-num{position:absolute;top:-20px;left:-20px;z-index:2;width:74px;height:74px;border-radius:50%;display:grid;place-items:center;background:var(--forest);color:var(--gold);font-family:var(--serif);font-style:italic;font-size:2.2rem;line-height:1;box-shadow:0 0 0 5px #fff,0 16px 30px -12px rgba(6,38,22,.6)}
+.orow:nth-child(even) .orow-num{left:auto;right:-20px}
+.orow-txt{display:grid;gap:clamp(14px,1.6vw,20px);justify-items:start}
+.orow-for{display:inline-flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border-radius:999px;background:rgba(255,255,255,.85);color:var(--forest);font-weight:700;font-size:.98rem;line-height:1.25}
+.orow-ic{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#fff;box-shadow:inset 0 0 0 2px var(--forest)}
+.orow-ic svg{width:72%;height:72%}
+.orow h3{font-size:clamp(2.2rem,4vw,3.5rem);line-height:1;letter-spacing:-.035em;color:var(--forest)}
+.orow h3 .serif{color:var(--acc)}
+.orow-pitch{font-size:clamp(1.05rem,1.4vw,1.2rem);line-height:1.5;color:var(--graphite);max-width:46ch}
+.orow-wins{display:grid;gap:10px}
+.orow-wins li{display:flex;align-items:center;gap:12px;font-weight:700;font-size:clamp(1.05rem,1.5vw,1.25rem);line-height:1.25;letter-spacing:-.01em;color:var(--forest)}
+.orow-ck{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--forest);color:var(--gold)}
+.orow-ck .ic{width:19px;height:19px;stroke-width:2.6}
+.orow-tags{display:flex;flex-wrap:wrap;gap:8px}
+.orow-tags li{padding:6px 13px;border-radius:999px;background:#fff;color:var(--forest);font-weight:700;font-size:.88rem;box-shadow:inset 0 0 0 1.5px rgba(10,57,34,.1)}
+.orow-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+.offers-note{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:clamp(26px,3vw,42px);color:var(--forest);font-size:1.02rem;text-align:center}
+.offers-note .ic{color:var(--leaf-deep)}
+@media (max-width:900px){
+  .orow,.orow:nth-child(even){grid-template-columns:1fr;border-radius:38px}
+  .orow:nth-child(even) .orow-vis{order:0}
+  .orow-vis{max-width:420px}
+  .orow-num,.orow:nth-child(even) .orow-num{width:58px;height:58px;font-size:1.7rem;top:-14px;left:-10px;right:auto}
+}
+@media (max-width:560px){
+  .orow{padding:16px 16px 22px}
+  .orow-cta{width:100%}
+  .orow-cta .btn{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:reduce){.orow::before{animation:none}}

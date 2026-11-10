@@ -13,6 +13,19 @@
     rev.forEach(function(el){ io.observe(el); });
   } else { rev.forEach(function(el){ el.classList.add('in'); }); }
 
+  /* Fonds légèrement animés : un calque .bgfx dans chaque bande et le pied de page (sauf les bandes qui ont déjà
+     leur propre fond animé, .pg-bg) ; il ne bouge que lorsqu'il est à l'écran, et jamais si les animations sont réduites */
+  var fxs=[];
+  d.querySelectorAll('.band, footer').forEach(function(b){
+    if(b.querySelector(':scope > .pg-bg')) return;
+    var f=d.createElement('div'); f.className='bgfx'; f.setAttribute('aria-hidden','true');
+    f.appendChild(d.createElement('i')); b.insertBefore(f,b.firstChild); fxs.push(f);
+  });
+  if(!reduce && 'IntersectionObserver' in window){
+    var fio=new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.classList.toggle('on',e.isIntersecting); }); },{rootMargin:'100px 0px'});
+    fxs.forEach(function(f){ fio.observe(f); });
+  }
+
   /* Barre de progression */
   var prog=d.getElementById('prog'), tick=false;
   function onScroll(){
@@ -59,12 +72,15 @@
      - la version nette remplace la légère sans à-coup : au bouclage de la vidéo, ou aussitôt si elle est à l'arrêt
      - économie de données ou 2G : pas de lecture automatique, la photo reste et le bouton lance la vidéo ;
        en 3G : version légère seulement
-     - si la version nette ne peut pas être lue, on revient à la légère ; si rien ne peut être lu, la photo reste */
+     - si la version nette ne peut pas être lue, on revient à la légère ; si rien ne peut être lu, la photo reste
+     - ordinateur (souris et écran de 1024 px ou plus) : on démarre directement sur la version moyenne (720),
+       puis on vise la version HD (1080) quel que soit l'écran, avec un délai de téléchargement plus généreux */
   var vids=d.querySelectorAll('video[data-src]');
   var conn=navigator.connection||navigator.mozConnection||navigator.webkitConnection||{};
   var lowData=!!(conn.saveData||/^(slow-2g|2g)$/.test(conn.effectiveType||''));
   var slowNet=lowData||(conn.effectiveType==='3g');
-  var UPGRADE_MAX_S=6;
+  var desk=fine&&window.matchMedia&&window.matchMedia('(min-width:1024px)').matches;
+  var UPGRADE_MAX_S=desk?12:6;
   function setBtn(v,playing){
     var btn=v.parentNode.querySelector('.vbtn'); if(!btn) return;
     btn.setAttribute('data-state',playing?'playing':'paused');
@@ -78,6 +94,7 @@
   }
   /* rang de la version la plus nette utile sur cet écran */
   function targetIndex(v,list){
+    if(desk) return list.length-1;
     var need=(v.clientWidth||360)*Math.min(window.devicePixelRatio||1,2);
     for(var i=0;i<list.length;i++){ if(list[i].w>=need) return i; }
     return list.length-1;
@@ -93,6 +110,8 @@
     v._manual=false; v._vis=false;
     var btn=v.parentNode.querySelector('.vbtn');
     var list=sourcesOf(v), cur=-1, pending=null, blobUrl=null, decided=false, noUp=false, last=0, t0=0, tick=null;
+    /* version de départ : la légère, ou la moyenne sur ordinateur */
+    var first=(desk&&!slowNet&&list.length>2)?1:0;
 
     /* débit : part du fichier léger déjà reçue / temps écoulé ; décision une fois le fichier reçu (ou après 5 s) */
     function speedCheck(){
@@ -101,11 +120,11 @@
       var f=(b&&b.length&&dur>0&&isFinite(dur))?Math.min(1,b.end(b.length-1)/dur):0;
       if(f>=.97||(s>=5&&(f>0||v._vis))){
         decided=true; clearInterval(tick); v.removeEventListener('progress',speedCheck);
-        upgrade(f*list[0].bytes*8/1e6/Math.max(s,.05));
+        upgrade(f*list[first].bytes*8/1e6/Math.max(s,.05));
       }
     }
     function watchSpeed(reset){
-      if(decided||noUp||slowNet||list.length<2||!list[0].bytes) return;
+      if(decided||noUp||slowNet||list.length<2||!list[first].bytes||first>=list.length-1) return;
       if(!t0||(reset&&!(v.buffered&&v.buffered.length))) t0=performance.now();
       if(!tick){ tick=setInterval(speedCheck,250); v.addEventListener('progress',speedCheck); }
     }
@@ -132,24 +151,29 @@
       if(old) URL.revokeObjectURL(old);
       if(was){ var q=v.play(); if(q&&q.catch) q.catch(function(){ setBtn(v,false); }); }
       /* garde-fou : si la version nette ne démarre pas, retour à la légère */
-      setTimeout(function(){ if(cur>0&&v._vis&&!v._manual&&v.readyState<2) revertLite(); },6000);
+      setTimeout(function(){ if(cur>first&&v._vis&&!v._manual&&v.readyState<2) revertLite(); },6000);
     }
     function revertLite(){
-      if(cur<=0) return;
-      noUp=true; pending=null; cur=0;
-      var old=blobUrl; blobUrl=null; v.src=list[0].url; v.load();
+      if(cur<=first) return;
+      noUp=true; pending=null; cur=first;
+      var old=blobUrl; blobUrl=null; v.src=list[first].url; v.load();
       if(old) URL.revokeObjectURL(old);
       if(v._vis&&!v._manual) play();
     }
     function ensureSrc(){
       if(v.getAttribute('src')) return;
-      cur=0; v.preload='auto'; v.src=list[0].url; v.load(); watchSpeed(false);
+      cur=first; v.preload='auto'; v.src=list[first].url; v.load(); watchSpeed(false);
     }
     function play(){
       applyPending(); ensureSrc(); watchSpeed(true);
       var p=v.play(); if(p&&p.then){ p.then(function(){setBtn(v,true);},function(){setBtn(v,false);}); }
     }
-    v.addEventListener('error',function(){ if(cur>0) revertLite(); else setBtn(v,false); });
+    v.addEventListener('error',function(){
+      if(cur>first) revertLite();
+      /* la version moyenne ne se lit pas : on retente avec la légère */
+      else if(cur>0){ first=0; noUp=true; cur=0; v.src=list[0].url; v.load(); if(v._vis&&!v._manual) play(); }
+      else setBtn(v,false);
+    });
     /* bouclage de la lecture : bon moment pour passer à la version nette */
     v.addEventListener('timeupdate',function(){
       if(pending&&!v.paused&&v.currentTime<last-.5) applyPending();
@@ -173,45 +197,22 @@
     } else { v._vis=true; play(); }
   });
 
-  /* Mes coachings : chaque carte ouvre son détail, un seul à la fois.
-     #individuel, #team-building et #intervention-entreprise ouvrent l'offre ; l'adresse suit l'offre ouverte pour pouvoir la copier. */
+  /* Mes coachings : une rangée par offre (#individuel, #intervention-entreprise, #team-building).
+     Les liens vers ces ancres font défiler jusqu'à la rangée, déjà affichée (sans attendre l'animation d'apparition). */
   var OFFERS=['individuel','team-building','intervention-entreprise'];
-  function offer(k){ var c=d.getElementById(k); return c&&{card:c,btn:c.querySelector('.ocard-btn'),panel:d.getElementById('detail-'+k)}; }
-  function jump(el,block,instant){
-    if(instant){ root.style.scrollBehavior='auto'; el.scrollIntoView({block:block}); root.style.scrollBehavior=''; }
-    else el.scrollIntoView({behavior:reduce?'auto':'smooth',block:block});
-  }
-  function showOffer(key,o){
-    o=o||{};
-    OFFERS.forEach(function(k){
-      var p=offer(k), on=k===key; if(!p) return;
-      p.panel.hidden=!on;
-      p.card.classList.toggle('is-open',on);
-      /* carte posée à sa place finale (sans l'animation d'apparition) pour viser juste en défilant */
-      if(on && !p.card.classList.contains('in')){ p.card.style.transition='none'; p.card.classList.add('in'); void p.card.offsetWidth; p.card.style.transition=''; }
-      p.btn.setAttribute('aria-expanded',on?'true':'false');
-      p.btn.querySelector('.ocard-lbl').textContent=on?'Masquer le détail':'Voir le détail';
+  function showRow(k,instant){
+    var row=d.getElementById(k); if(!row) return;
+    row.querySelectorAll('[data-reveal]').forEach(function(el){
+      if(!el.classList.contains('in')){ el.style.transition='none'; el.classList.add('in'); void el.offsetWidth; el.style.transition=''; }
     });
-    if(o.url){ try{ history.replaceState(null,'','#'+(key||'accompagnements')); }catch(e){} }
-    if(key&&o.scroll){ var p=offer(key); if(o.scroll==='card') jump(p.card,'start',o.instant); else jump(p.panel,'nearest'); }
+    if(instant){ root.style.scrollBehavior='auto'; row.scrollIntoView({block:'start'}); root.style.scrollBehavior=''; }
+    else row.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
   }
-  OFFERS.forEach(function(k){
-    var p=offer(k); if(!p) return;
-    p.btn.addEventListener('click',function(){
-      showOffer(p.btn.getAttribute('aria-expanded')==='true'?null:k,{url:true,scroll:'panel'});
-    });
-    /* toute la carte agit comme son bouton, sauf le bouton lecture/pause de la vidéo */
-    p.card.addEventListener('click',function(e){ if(!e.target.closest('button,a')) p.btn.click(); });
-  });
-  function offerFromHash(instant){
-    var k=location.hash.slice(1);
-    if(OFFERS.indexOf(k)>-1) showOffer(k,{scroll:'card',instant:instant});
-  }
-  window.addEventListener('hashchange',function(){ offerFromHash(false); });
+  window.addEventListener('hashchange',function(){ var k=location.hash.slice(1); if(OFFERS.indexOf(k)>-1) showRow(k,false); });
   if(OFFERS.indexOf(location.hash.slice(1))>-1){
-    showOffer(location.hash.slice(1));
     /* on recale après chargement des images et polices, qui déplacent la page */
-    if(d.readyState==='complete') offerFromHash(true); else window.addEventListener('load',function(){ offerFromHash(true); });
+    var hk=location.hash.slice(1);
+    if(d.readyState==='complete') showRow(hk,true); else window.addEventListener('load',function(){ showRow(hk,true); });
   }
 
   /* Copier */
