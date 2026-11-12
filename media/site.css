@@ -1312,3 +1312,12 @@ footer{position:relative;overflow:hidden}
   .bk-head .bk-title{font-size:clamp(2rem,2.6vw,2.6rem)}
 }
 @media (min-width:1100px) and (max-width:1300px){#rdvPage .wrap{padding-left:20px;padding-right:20px}}
+/* Écrans peu hauts (portables 1366×768, affichage zoomé…) : en-tête resserré, et on masque une partie de la
+   grande marge blanche que Calendly laisse au-dessus de sa carte, pour voir le mois entier sans défiler. */
+@media (min-width:1100px) and (max-height:820px){
+  .rdv-top{padding-block:8px}
+  .bk{padding-top:10px;gap:10px}
+  .bk-head .bk-title{font-size:1.75rem}
+  .bk-bar{position:relative;z-index:1}
+  .bk-frame{margin-top:-50px}
+}
