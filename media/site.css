@@ -1378,16 +1378,16 @@ footer{position:relative;overflow:hidden}
 .ho-3 .ho-ic{background:#a6dbf2}
 .ho-2 .ho-ic{background:#f8d77f}
 
-/* ---------- V29 : premier écran sobre, compris d'un coup d'œil ----------
-   Seulement l'essentiel : qui / où (surtitre), l'accroche (titre), la promesse (2 lignes), les 3 coachings,
-   et le portrait avec un seul repère de confiance (ceinture noire, éducateur sportif).
-   Sur téléphone, portrait plus petit pour que le titre apparaisse dès l'arrivée. */
-.hero-band{padding-top:clamp(28px,4.4vw,72px)}
-#accueil .hero-left{gap:clamp(20px,2.4vw,30px)}
-#accueil h1 .eyebrow{margin-bottom:clamp(16px,2vw,24px)}
-#accueil .hero-lead{max-width:none;font-size:clamp(1.05rem,1.55vw,1.42rem);line-height:1.35;text-wrap:balance}
-#accueil .hero-offers{margin-top:4px}
+/* ---------- V29 : premier écran sobre et aéré ----------
+   Seulement l'essentiel : qui / où (surtitre), l'accroche (titre), la promesse (2 lignes),
+   et le portrait avec ses étiquettes (énergie, bien-être, cohésion, ceinture noire).
+   Textes bien espacés ; sur téléphone, portrait plus petit pour que le titre apparaisse dès l'arrivée. */
+.hero-band{padding-top:clamp(36px,5.4vw,88px)}
+#accueil .hero-left{gap:clamp(28px,3.4vw,46px)}
+#accueil h1 .eyebrow{margin-bottom:clamp(24px,3vw,40px)}
+#accueil h1 .line+.line{margin-top:.06em}
+#accueil .hero-lead{max-width:none;font-size:clamp(1.05rem,1.55vw,1.42rem);line-height:1.6;letter-spacing:.005em;text-wrap:balance;padding-block:4px}
 @media (max-width:900px){
-  #accueil .hero-right{max-width:250px}
+  #accueil .hero-right{max-width:280px;margin-bottom:8px}
   #accueil .hero-lead{padding-left:14px;border-left-width:3px}
 }
