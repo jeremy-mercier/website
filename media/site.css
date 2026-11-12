@@ -1299,3 +1299,16 @@ footer{position:relative;overflow:hidden}
   .orow-cta .btn{flex:1 1 100%}
 }
 @media (prefers-reduced-motion:reduce){.orow::before{animation:none}}
+
+/* ---------- V26 : réservation, Calendly en deux colonnes (infos à gauche, calendrier à droite) sans défiler ----------
+   Calendly ne passe en deux colonnes que si son cadre fait au moins 1120 px de large : la carte prend toute la
+   largeur du site, le titre et l'essentiel tiennent sur une ligne, et la hauteur du cadre suit celle que Calendly
+   annonce (voir site.js), sans barre de défilement intérieure. */
+.bk{max-width:1280px}
+@media (min-width:1100px){
+  .bk{padding-block:22px 64px;gap:18px}
+  .bk-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px 32px}
+  .bk-head .eyebrow{display:none}
+  .bk-head .bk-title{font-size:clamp(2rem,2.6vw,2.6rem)}
+}
+@media (min-width:1100px) and (max-width:1300px){#rdvPage .wrap{padding-left:20px;padding-right:20px}}

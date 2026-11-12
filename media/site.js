@@ -467,6 +467,11 @@
     var ev=e.data&&e.data.event; if(typeof ev!=='string'||ev.indexOf('calendly.')!==0) return;
     calSeen=true; clearTimeout(calTimer);
     $('bkLoad').hidden=true; $('bkFb').hidden=true; if(calFrame) calFrame.classList.remove('bk-wait');
+    if(ev==='calendly.page_height'){
+      /* le cadre prend la hauteur du contenu de Calendly : pas de barre de défilement dans le calendrier */
+      var h=parseInt(e.data.payload&&e.data.payload.height,10);
+      if(h>300&&calFrame) calFrame.style.height=h+'px';
+    }
     if(ev==='calendly.event_scheduled'){
       var ok=$('bkOk'); ok.hidden=false;
       try{ ok.scrollIntoView({block:'center',behavior:reduce?'auto':'smooth'}); }catch(x){}
