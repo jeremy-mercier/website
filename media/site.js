@@ -333,14 +333,15 @@
     cnt.forEach(function(el){ el.textContent='0'+(el.getAttribute('data-suf')||''); cio.observe(el); });
   }
 
-  /* ================= Quiz « Quel coaching pour vous ? » : orienter vers la bonne offre en 4 questions =================
+  /* ================= Quiz « Quel coaching pour vous ? » : orienter et expliquer, en 4 questions =================
      - Question 1 : pour qui ? -> un particulier (coaching individuel) ou une entreprise (intervention / team building)
-     - Particulier : ce qui pèse, niveau de sport, moment préféré -> coaching individuel, avec 3 repères personnalisés
-     - Entreprise : format, objectif, taille du groupe
-       -> séances régulières = intervention en entreprise ; temps fort ponctuel = team building ;
-          « je ne sais pas encore » = selon l'objectif (stress, énergie -> intervention ; cohésion, événement -> team building)
-     - Résultat : un conseil clair, 3 raisons tirées des réponses, « Réserver mon appel » + « Découvrir l'offre ».
-       Aucun chiffre inventé : c'est un premier repère, affiné pendant l'appel. */
+     - Particulier : ce qui pèse (-> programme : Décompression, Recharge, Express, Reprise), niveau de sport
+       (-> échauffement, durée, rythme), moment préféré (-> créneau et son intérêt)
+     - Entreprise : format (régulier / ponctuel / je ne sais pas), objectif, taille du groupe
+       -> régulier = intervention en entreprise ; ponctuel = team building ; « je ne sais pas » = selon l'objectif
+     - Résultat construit à partir des réponses : « Vous m'avez dit », pourquoi cette offre répond au problème,
+       la séance type ou le déroulé, ce qu'on peut en attendre, et une note si format et objectif tirent dans
+       deux sens. Aucun chiffre inventé : c'est un premier repère, affiné pendant l'appel. */
   var QUIZ={need:null,text:null};
   (function(){
     var body=d.getElementById('qzBody'), bar=d.getElementById('qzBar'), stepEl=d.getElementById('qzStep');
@@ -355,46 +356,102 @@
     function ic(n){ return ICON[n]||'<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-'+n+'"/></svg>'; }
     var OFFRES={
       ind:{rec:'Coaching <span class="serif">individuel</span>',plain:'Coaching individuel',cls:'r1',href:'/coaching-individuel-boxe-lyon/'},
-      int:{rec:'Intervention <span class="serif">en entreprise</span>',plain:'Intervention en entreprise',cls:'r3',href:'/intervention-entreprise-boxe-lyon/',
-           fmt:'Du FitBoxing (boxe + fitness) dans vos locaux, à un rythme défini avec vous'},
-      team:{rec:'<span class="serif">Team</span> building',plain:'Team building',cls:'r2',href:'/team-building-boxe-lyon/',
-           fmt:'Des défis ludiques et des exercices à deux, dans vos locaux ou ailleurs, tous niveaux'}
+      int:{rec:'Intervention <span class="serif">en entreprise</span>',plain:'Intervention en entreprise',cls:'r3',href:'/intervention-entreprise-boxe-lyon/',fmt:'Séances régulières'},
+      team:{rec:'<span class="serif">Team</span> building',plain:'Team building',cls:'r2',href:'/team-building-boxe-lyon/',fmt:'Temps fort ponctuel'}
     };
     var Q1={q:'Le coaching, c’est <span class="serif">pour qui</span>&nbsp;?',opts:[
       {i:'user',l:'Pour moi',s:'Particulier'},
       {i:'brief',l:'Pour mon entreprise',s:'Entreprise'}]};
+
+    /* ---------- Particulier ---------- */
     var PART=[
       {q:'Qu’est-ce qui vous <span class="serif">pèse</span> le plus en ce moment&nbsp;?',opts:[
-        {i:'pression',l:'Le stress, la pression',goal:'relâcher la pression',why:'On évacue la tension en frappant, puis on termine au calme, respiration comprise'},
-        {i:'fatigue',l:'La fatigue, le manque d’énergie',goal:'retrouver de l’énergie',why:'Des efforts courts et vifs, qui redonnent de l’énergie au lieu d’en prendre'},
-        {i:'temps',l:'Pas le temps de bouger',goal:'bouger malgré un agenda chargé',why:'Des séances efficaces, sans temps mort, qui trouvent leur place dans votre semaine'},
-        {i:'target',l:'L’envie de me remettre au sport',goal:'reprendre le sport avec plaisir',why:'Une reprise progressive, avec le plaisir de frapper et de progresser'}]},
+        {i:'pression',l:'Le stress, la pression',name:'Décompression',goal:'relâcher la pression',
+         why:'Le stress, c’est de la tension qui s’accumule sans trouver de sortie. En boxe, vous la déchargez physiquement&nbsp;: on frappe, on bouge, on souffle. Et chaque séance se termine par un retour au calme guidé, pour repartir apaisé, pas vidé.',
+         core:'Des enchaînements intenses aux pattes d’ours, pour évacuer la tension accumulée',
+         coreStart:'Des enchaînements aux pattes d’ours, de plus en plus soutenus au fil des semaines, pour évacuer la tension',
+         coreSoft:'Des enchaînements aux pattes d’ours, à une intensité adaptée à votre corps, pour évacuer la tension',
+         end:'Retour au calme et respiration guidée, pour faire redescendre la pression',
+         gains:['Une vraie soupape, chaque semaine','Plus de recul face aux situations tendues','Des soirées plus apaisées']},
+        {i:'fatigue',l:'La fatigue, le manque d’énergie',name:'Recharge',goal:'retrouver de l’énergie',
+         why:'Quand on est fatigué, on bouge moins… et on se sent encore plus à plat. Des efforts courts et bien dosés relancent la machine&nbsp;: le corps s’active, la tête se réveille, et vous repartez avec plus d’énergie qu’en arrivant.',
+         core:'Des séries courtes et vives, avec des pauses actives, pour relancer l’énergie sans vous épuiser',
+         coreSoft:'Des séries courtes à intensité modérée, pour relancer l’énergie en douceur',
+         end:'Étirements légers, pour repartir frais et non fatigué',
+         gains:['Plus d’énergie au fil des semaines','Une tête plus claire','Moins de coups de barre dans la journée']},
+        {i:'temps',l:'Pas le temps de bouger',name:'Express',goal:'bouger malgré un agenda chargé',short:true,
+         why:'Quand l’agenda déborde, le sport passe toujours en dernier. La solution&nbsp;: une séance courte et dense, que vous n’avez pas à organiser. Je prépare tout, vous n’avez qu’à venir et frapper.',
+         core:'Un circuit boxe dense, sans temps mort, pour tout faire en peu de temps',
+         coreStart:'Un circuit boxe court et progressif, sans temps mort, pour tout faire en peu de temps',
+         coreSoft:'Un circuit court et efficace, à intensité adaptée à votre corps, pour tout faire en peu de temps',
+         end:'Quelques minutes de récupération, pour enchaîner directement sur la suite de votre journée',
+         gains:['Une activité qui tient enfin dans votre agenda','Un rendez-vous fixe, rien que pour vous','De l’énergie pour le reste de la journée']},
+        {i:'target',l:'L’envie de me remettre au sport',name:'Reprise',goal:'reprendre le sport avec plaisir',
+         why:'Reprendre seul, c’est souvent s’arrêter au bout de deux semaines. Avec un coach, vous avez un rendez-vous, un plan et quelqu’un qui ajuste à chaque séance. Et la boxe a un vrai atout&nbsp;: on apprend en s’amusant, donc on a envie de revenir.',
+         core:'L’apprentissage des coups et des enchaînements, avec des progrès visibles d’une séance à l’autre',
+         coreSoft:'L’apprentissage des coups à votre rythme, avec des gestes adaptés à votre corps',
+         end:'Renforcement et étirements, pour progresser sans se blesser',
+         gains:['Une habitude sportive qui s’installe','Le plaisir de progresser','Une condition physique qui revient']}]},
       {q:'Où en êtes-vous <span class="serif">côté sport</span>&nbsp;?',opts:[
-        {i:'user',l:'Rien depuis longtemps',why:'On repart de zéro, avec des gestes simples montrés pas à pas'},
-        {i:'trend',l:'Un peu, de temps en temps',why:'On donne un cadre et de la régularité à ce que vous faites déjà'},
-        {i:'bolt',l:'Je m’entraîne régulièrement',why:'On monte en intensité, avec de la vraie technique de boxe'},
-        {i:'cross',l:'Une gêne me freine',why:'Chaque geste est adapté à votre corps, avec l’avis de votre médecin si besoin'}]},
+        {i:'user',l:'Rien depuis longtemps',dur:'45 min',rhythm:'1 séance par semaine pour démarrer',
+         why:'Comme vous reprenez après une longue pause, le tête-à-tête est idéal&nbsp;: j’ajuste l’intensité en direct, geste par geste, sans jamais vous mettre en difficulté.',
+         warm:'Mise en route douce&nbsp;: articulations, puis cardio progressif'},
+        {i:'trend',l:'Un peu, de temps en temps',dur:'1 h',rhythm:'1 à 2 séances par semaine',
+         why:'Vous bougez déjà un peu&nbsp;: on s’appuie là-dessus pour installer de la régularité, avec un cadre qui vous fait avancer semaine après semaine.',
+         warm:'Corde à sauter et déplacements, pour monter en rythme'},
+        {i:'bolt',l:'Je m’entraîne régulièrement',dur:'1 h',rhythm:'1 séance par semaine, en complément de votre entraînement',
+         why:'Vous êtes déjà sportif&nbsp;: on peut aller plus loin en intensité et en technique, avec de vrais enchaînements de boxe qui changent de vos habitudes.',
+         warm:'Shadow boxing et gammes techniques'},
+        {i:'cross',l:'Une gêne me freine',dur:'45 min',rhythm:'1 séance par semaine, à intensité modérée',
+         why:'Avec une gêne physique, le suivi individuel fait toute la différence&nbsp;: chaque geste est adapté à votre corps et on avance à votre rythme (avec l’avis de votre médecin en cas de doute).',
+         warm:'Mobilité ciblée, en douceur, en ménageant la zone sensible'}]},
       {q:'Quel moment vous <span class="serif">arrange</span>&nbsp;?',opts:[
-        {i:'sun',l:'Le matin',slot:'le matin'},
-        {i:'star',l:'Sur le temps du midi',slot:'sur le temps du midi'},
-        {i:'moon',l:'En fin de journée',slot:'en fin de journée'},
-        {i:'cal',l:'Ça dépend des semaines',slot:'calées semaine après semaine'}]}
+        {i:'sun',l:'Le matin',slot:'Le matin',why:'Placée le matin, la séance vous lance avec de l’élan pour toute la journée.'},
+        {i:'star',l:'Sur le temps du midi',slot:'Le midi',why:'Sur le temps du midi, elle coupe la journée en deux et évite le coup de barre de l’après-midi.'},
+        {i:'moon',l:'En fin de journée',slot:'En fin de journée',why:'En fin de journée, elle marque une vraie coupure entre le travail et la soirée.'},
+        {i:'cal',l:'Ça dépend des semaines',slot:'Créneau souple',why:'Les créneaux se calent semaine après semaine&nbsp;: la séance s’adapte à votre agenda, et pas l’inverse.'}]}
     ];
+
+    /* ---------- Entreprise ---------- */
     var ENT=[
       {q:'Vous imaginez plutôt <span class="serif">quel format</span>&nbsp;?',opts:[
         {i:'cal',l:'Des séances régulières',s:'Toute l’année',fmt:'int'},
         {i:'trophy',l:'Un temps fort ponctuel',s:'Séminaire, événement…',fmt:'team'},
         {i:'info',l:'Je ne sais pas encore',s:'On regarde ensemble',fmt:null}]},
       {q:'Votre <span class="serif">objectif</span> principal&nbsp;?',opts:[
-        {i:'smile',l:'Moins de stress dans les équipes',lean:'int',goal:'faire baisser la pression',why:'Des séances qui font retomber la pression, semaine après semaine'},
-        {i:'users',l:'Plus de cohésion',lean:'team',goal:'renforcer la cohésion',why:'Des défis à deux et en petits groupes, qui rapprochent les collègues'},
-        {i:'bolt',l:'Plus d’énergie au travail',lean:'int',goal:'redonner de l’énergie',why:'Un effort dynamique qui relance l’énergie de toute l’équipe'},
-        {i:'star',l:'Marquer un événement',lean:'team',goal:'marquer un événement',why:'Un moment fort et fédérateur, dont l’équipe se souviendra'}]},
+        {i:'smile',l:'Moins de stress dans les équipes',lean:'int',goal:'faire baisser la pression',
+         why:'Le stress au travail s’accumule sans trouver de sortie. La boxe en offre une, concrète&nbsp;: on frappe, on bouge, on souffle, et chacun repart plus léger.',
+         int:'Chaque séance se termine par un retour au calme, pour faire retomber la pression',
+         team:'Des défis de frappe pour se défouler, puis un retour au calme collectif',
+         gains:['Une pression qui retombe','Des collaborateurs plus sereins','Un climat de travail plus apaisé']},
+        {i:'users',l:'Plus de cohésion',lean:'team',goal:'renforcer la cohésion',
+         why:'La cohésion ne se décrète pas, elle se vit. Les exercices à deux et les défis en équipe obligent à se coordonner, à s’encourager et à se faire confiance.',
+         int:'Des binômes qui changent à chaque séance, pour mélanger les services',
+         team:'Des défis par équipes et des exercices à deux, où l’on gagne ensemble',
+         gains:['Des liens renforcés entre collègues','Plus de confiance et d’entraide','Une équipe plus soudée']},
+        {i:'bolt',l:'Plus d’énergie au travail',lean:'int',goal:'redonner de l’énergie',
+         why:'Quand l’énergie baisse, tout le monde le sent. Un effort dynamique, en musique et en groupe, réveille le corps et la tête&nbsp;: l’équipe repart avec un vrai élan.',
+         int:'Des séances rythmées, idéalement en début de journée ou de semaine',
+         team:'Des enchaînements dynamiques en musique, pour réveiller tout le groupe',
+         gains:['Une équipe plus dynamique','Plus de motivation au quotidien','Un élan collectif retrouvé']},
+        {i:'star',l:'Marquer un événement',lean:'team',goal:'marquer un événement',
+         why:'Pour marquer un cap, rien de tel qu’une expérience inhabituelle et partagée. La boxe surprend, fait rire et crée des souvenirs communs.',
+         int:'Une première séance pensée comme un temps fort, pour marquer le lancement',
+         team:'Un défi final par équipes, pour finir sur un moment fort',
+         gains:['Un souvenir commun fort','Une équipe fière de ce qu’elle a vécu','Une dynamique positive pour la suite']}]},
       {q:'Combien de <span class="serif">personnes</span>&nbsp;?',opts:[
-        {i:'user',l:'Moins de 10',why:'En petit groupe, chacun est suivi de près'},
-        {i:'users',l:'De 10 à 30',why:'Un groupe complet, encadré du premier au dernier geste'},
-        {i:'users',l:'Plus de 30',why:'En sous-groupes, pour que chacun participe vraiment'}]}
+        {i:'user',l:'Moins de 10',org:'Un seul groupe',why:'En petit groupe, je suis chacun de près&nbsp;: les consignes sont personnalisées et tout le monde progresse.'},
+        {i:'users',l:'De 10 à 30',org:'Binômes et petites équipes',why:'Avec 10 à 30 personnes, on travaille en binômes et en petites équipes&nbsp;: tout le monde participe en même temps, sans temps mort.'},
+        {i:'users',l:'Plus de 30',org:'Sous-groupes en rotation',why:'Au-delà de 30 personnes, on organise des sous-groupes en rotation, pour que chacun participe vraiment et en toute sécurité.'}]}
     ];
+    /* pourquoi ce format plutôt que l'autre (format choisi, ou déduit de l'objectif si « je ne sais pas ») */
+    var FMT_WHY={
+      int:{known:'Vous visez la durée&nbsp;: des séances régulières installent une habitude, et les effets se construisent semaine après semaine au lieu de retomber après un seul événement.',
+           guess:'Comme votre objectif se joue dans la durée, je vous conseille des séances régulières plutôt qu’un événement unique&nbsp;: c’est la répétition qui fait la différence.'},
+      team:{known:'Vous visez un temps fort&nbsp;: un team building concentre l’énergie sur un moment marquant, simple à organiser, qui lance une vraie dynamique.',
+            guess:'Comme votre objectif se vit surtout lors d’un moment fort partagé, je vous conseille de commencer par un team building&nbsp;: c’est le format le plus marquant pour lancer la dynamique.'}
+    };
+
     var ans=[];
     function path(){ return ans[0]===1?ENT:PART; }
     function spec(i){ return i===0?Q1:path()[i-1]; }
@@ -421,35 +478,63 @@
       var bk=d.getElementById('qzBack'); if(bk) bk.addEventListener('click',function(){ ask(i-1); });
     }
     function plain(t){ return t.replace(/&nbsp;/g,' ').replace(/<[^>]+>/g,''); }
-    /* le conseil : l'offre, une phrase d'objectif et 3 raisons tirées des réponses */
+    /* le conseil, construit à partir des réponses */
     function decide(){
+      var said=[1,2,3].map(function(k){ return path()[k-1].opts[ans[k]].l; });
       if(ans[0]!==1){
         var a=PART[0].opts[ans[1]], b=PART[1].opts[ans[2]], c=PART[2].opts[ans[3]];
-        return {who:'part',offre:OFFRES.ind,sum:'Votre objectif&nbsp;: '+a.goal+'. Voici comment on s’y prend&nbsp;:',
-          why:[a.why,b.why,'En tête à tête à Lyon, avec des séances '+c.slot]};
+        /* cœur de séance ajusté au niveau : plus progressif après une longue pause, plus doux en cas de gêne */
+        var core=ans[2]===3?(a.coreSoft||a.core):ans[2]===0?(a.coreStart||a.core):a.core;
+        return {who:'part',offre:OFFRES.ind,said:said,
+          sub:'Un coaching en tête à tête, construit autour de votre besoin&nbsp;: '+a.goal+'.',
+          meta:['Programme «&nbsp;'+a.name+'&nbsp;»',a.short?'45 min':b.dur,b.rhythm,c.slot],
+          why:[a.why,b.why,c.why],
+          stepsK:'Votre séance type',steps:[['Échauffement',b.warm],['Cœur de séance',core],['Fin de séance',a.end]],
+          gainsK:'Ce que vous pouvez en attendre',gains:a.gains};
       }
-      var f=ENT[0].opts[ans[1]], g=ENT[1].opts[ans[2]], n=ENT[2].opts[ans[3]], o=OFFRES[f.fmt||g.lean];
-      return {who:'ent',offre:o,unsure:!f.fmt,sum:'Votre objectif&nbsp;: '+g.goal+'. Voici ce que je vous propose&nbsp;:',why:[g.why,o.fmt,n.why]};
+      var f=ENT[0].opts[ans[1]], g=ENT[1].opts[ans[2]], n=ENT[2].opts[ans[3]], key=f.fmt||g.lean, o=OFFRES[key];
+      var steps=key==='int'
+        ?[['Lancement',g===ENT[1].opts[3]?g.int:'Une séance découverte, pour que chacun teste sans pression'],
+          ['Rythme','Du FitBoxing (boxe + fitness) dans vos locaux, à une fréquence définie avec vous'],
+          ['À chaque séance',g===ENT[1].opts[3]?'Un point d’étape avec vous, pour ajuster le programme':g.int]]
+        :[['Ouverture','Accueil et échauffement collectif, ludique, pour mettre tout le monde à l’aise'],
+          ['Temps fort',g.team],
+          ['Clôture','Retour au calme et temps d’échange, pour ancrer ce qui a été vécu']];
+      var note=null;
+      if(!f.fmt) note='Bon à savoir&nbsp;: les deux formats se combinent très bien. Un team building lance la dynamique, des séances régulières la font durer.';
+      else if(key==='team'&&g.lean==='int') note='Bon à savoir&nbsp;: pour que l’effet dure, des séances régulières peuvent prendre le relais après le team building.';
+      else if(key==='int'&&g.lean==='team') note='Bon à savoir&nbsp;: un team building peut aussi ouvrir le programme, pour souder l’équipe dès le départ.';
+      return {who:'ent',offre:o,said:said,note:note,
+        sub:'Un programme pensé pour votre objectif&nbsp;: '+g.goal+'.',
+        meta:[o.fmt,n.org,key==='int'?'Dans vos locaux':'Dans vos locaux ou ailleurs'],
+        why:[g.why,FMT_WHY[key][f.fmt?'known':'guess'],n.why],
+        stepsK:'Le déroulé proposé',steps:steps,
+        gainsK:'Ce que vos équipes y gagnent',gains:g.gains};
     }
     function compute(){
       setProg(N,N+'/'+N);
       var r=decide();
       QUIZ.need=r.offre.plain;
-      QUIZ.text={pour:plain(Q1.opts[ans[0]].s),reponses:[1,2,3].map(function(k){ return plain(path()[k-1].opts[ans[k]].l); })};
+      QUIZ.text={pour:plain(Q1.opts[ans[0]].s),reponses:r.said.map(plain)};
       if(reduce){ result(r); return; }
-      view('<div class="qz-load" role="status"><div class="gl"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#d-glove"/></svg></div><b>Je prépare mon conseil…</b><div class="qz-dots" aria-hidden="true"><i></i><i></i><i></i></div></div>');
-      setTimeout(function(){ result(r); },1100);
+      view('<div class="qz-load" role="status"><div class="gl"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#d-glove"/></svg></div><b>Je prépare mon conseil à partir de vos réponses…</b><div class="qz-dots" aria-hidden="true"><i></i><i></i><i></i></div></div>');
+      setTimeout(function(){ result(r); },1200);
     }
     function li(t){ return '<li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>'+t+'</span></li>'; }
     function result(r){
       var o=r.offre, ent=r.who==='ent';
       var h='<h2 class="qz-q" id="qzQ" tabindex="-1">Mon conseil <span class="serif">'+(ent?'pour votre entreprise':'pour vous')+'</span></h2>'
       +'<article class="qr '+o.cls+'">'
-      +'<p class="qr-for"><svg class="ic" aria-hidden="true"><use href="#'+(ent?'i-brief':'i-user')+'"/></svg>'+(ent?'Entreprises':'Particuliers')+'</p>'
-      +'<h3 class="qr-name">'+o.rec+'</h3>'
-      +'<p class="qr-sum">'+r.sum+'</p>'
-      +'<ul class="qr-why">'+r.why.map(li).join('')+'</ul>'
-      +(r.unsure?'<p class="qr-alt">Bon à savoir&nbsp;: les deux formats se combinent très bien. Un team building lance la dynamique, des séances régulières la font durer.</p>':'')
+      +'<div class="qr-top"><p class="qr-for"><svg class="ic" aria-hidden="true"><use href="#'+(ent?'i-brief':'i-user')+'"/></svg>'+(ent?'Entreprises':'Particuliers')+'</p>'
+      +'<h3 class="qr-name">'+o.rec+'</h3><p class="qr-sub">'+r.sub+'</p>'
+      +'<ul class="qr-meta" aria-label="En bref">'+r.meta.map(function(m){ return '<li>'+m+'</li>'; }).join('')+'</ul></div>'
+      +'<div class="qr-cols">'
+      +'<div class="qr-col"><p class="qr-k">Vous m’avez dit</p><ul class="qr-said">'+r.said.map(function(s){ return '<li>'+s+'</li>'; }).join('')+'</ul>'
+      +'<p class="qr-k">Pourquoi '+(ent?'cette offre répond à votre besoin':'ce coaching va vous aider')+'</p><div class="qr-txt">'+r.why.map(function(p){ return '<p>'+p+'</p>'; }).join('')+'</div></div>'
+      +'<div class="qr-col"><p class="qr-k">'+r.stepsK+'</p><ol class="qr-steps">'+r.steps.map(function(s){ return '<li><span><b>'+s[0]+'</b>'+s[1]+'</span></li>'; }).join('')+'</ol>'
+      +'<p class="qr-k">'+r.gainsK+'</p><ul class="qr-gains">'+r.gains.map(li).join('')+'</ul></div>'
+      +'</div>'
+      +(r.note?'<p class="qr-alt">'+r.note+'</p>':'')
       +'<div class="qr-cta"><a class="btn btn-primary" href="#rdv">Réserver mon appel de 5&nbsp;min <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>'
       +'<a class="btn btn-secondary" href="'+o.href+'">Découvrir l’offre <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>'
       +'</article>'
