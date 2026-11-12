@@ -441,7 +441,7 @@
   })();
 
   /* ================= Réservation : calendrier Calendly intégré dans la page ================= */
-  var CAL_URL='https://calendly.com/mercier-naruto/5min';
+  var CAL_URL='https://calendly.com/coaching-jeremy-mercier/30min';
   var CAL_ORIGIN='https://calendly.com';
   var $=function(id){ return d.getElementById(id); };
   var calFrame=null, calSeen=false, calTimer=null;

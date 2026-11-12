@@ -25,4 +25,4 @@ Contenu :
   <link rel="icon"> et <link rel="apple-touch-icon"> du head de chaque page.
 
 Aucune base de données, aucun PHP, aucun outil à installer : ce sont de simples fichiers.
-La réservation d'appel utilise Calendly (calendly.com/mercier-naruto/5min).
+La réservation d'appel utilise Calendly (calendly.com/coaching-jeremy-mercier/30min).
