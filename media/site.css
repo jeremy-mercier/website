@@ -1373,11 +1373,27 @@ footer{position:relative;overflow:hidden}
 #accompagnements .orow-pitch{color:#24332b}
 #accompagnements .orow-for{background:#fff;box-shadow:0 6px 16px -10px rgba(6,38,22,.5)}
 #accompagnements .orow-tags li{box-shadow:0 4px 12px -8px rgba(6,38,22,.45)}
-/* raccourcis du premier écran : la cible au-dessus du nom de l'offre, pastilles d'icône aux mêmes couleurs */
-.ho-t{display:grid;gap:1px}
-.ho-for{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;line-height:1.1;color:#0a6b3d}
-.ho-3 .ho-for{color:#0a5f82}
-.ho-2 .ho-for{color:#7a4f00}
+/* raccourcis du premier écran : pastilles d'icône aux mêmes couleurs que les offres */
 .ho-1 .ho-ic{background:#9fe6c1}
 .ho-3 .ho-ic{background:#a6dbf2}
 .ho-2 .ho-ic{background:#f8d77f}
+
+/* ---------- V29 : premier écran resserré, compris d'un coup d'œil ----------
+   Ordre de lecture : accroche (titre) -> promesse (2 lignes) -> action (appel gratuit) -> les 3 coachings.
+   Sur téléphone, portrait plus petit pour que titre et bouton apparaissent dès l'arrivée. */
+.hero-band{padding-top:clamp(28px,4.4vw,72px)}
+#accueil .hero-left{gap:clamp(18px,2.2vw,26px)}
+#accueil h1 .eyebrow{margin-bottom:clamp(16px,2vw,24px)}
+#accueil .hero-lead{max-width:none;font-size:clamp(1.05rem,1.55vw,1.42rem);line-height:1.35;text-wrap:balance}
+#accueil .hero-go{gap:12px 20px;margin-top:2px}
+.hero-note{display:inline-flex;align-items:center;gap:8px;color:var(--mute-on-dark);font-weight:600;font-size:.98rem}
+.hero-note .ic{width:18px;height:18px;color:var(--leaf);stroke-width:2.6}
+#accueil .hero-offers{margin-top:6px}
+@media (max-width:900px){
+  #accueil .hero-right{max-width:250px}
+  #accueil .hero-lead{padding-left:14px;border-left-width:3px}
+}
+@media (max-width:480px){
+  #accueil .hero-go .btn-big{width:100%;padding-inline:18px}
+  #accueil .hero-note{width:100%;justify-content:center;margin-top:-4px}
+}
