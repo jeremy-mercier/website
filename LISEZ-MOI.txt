@@ -20,6 +20,12 @@ Contenu :
   favicon-96x96.png, favicon-192x192.png, apple-touch-icon.png (180 px), icon-512.png
   (icon-512.png sert aussi de logo dans les données structurées de l'accueil).
 
+Cibles (depuis le 12/11/2026) : on ne parle que de PARTICULIERS et d'ENTREPRISES.
+- Coaching individuel -> Particuliers (couleur verte)
+- Intervention en entreprise et Team building -> Entreprises (bleu et or)
+Ne plus écrire « dirigeants, entrepreneurs, cadres » comme public visé (textes, titres, descriptions,
+données structurées « audienceType », FAQ).
+
 À savoir :
 - Chaque page contient des données structurées (balise script application/ld+json dans le head).
   La partie FAQPage reprend mot pour mot les questions visibles : si une question ou une réponse
