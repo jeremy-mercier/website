@@ -4,9 +4,9 @@
 <meta name="description" content="Jérémy Mercier, coach de boxe bien-être à Lyon : coaching individuel pour dirigeants, entrepreneurs et cadres, intervention en entreprise et team building.">
 <link rel="preload" href="/media/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/media/fonts/instrument-serif-italic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/media/site.css?v=28">
+<link rel="stylesheet" href="/media/site.css?v=29">
 <script>document.documentElement.classList.add('js')</script>
-<script src="/media/site.js?v=28" defer></script>
+<script src="/media/site.js?v=29" defer></script>
 <link rel="dns-prefetch" href="https://calendly.com">
 <link rel="canonical" href="https://jeremy-mercier.fr/">
 <link rel="icon" href="/favicon.ico?v=2" sizes="any">
@@ -76,7 +76,7 @@
    "image": "https://jeremy-mercier.fr/media/og-image.jpg",
    "logo": "https://jeremy-mercier.fr/icon-512.png",
    "telephone": "+33 6 31 19 45 69",
-   "email": "mercier.bourguignon@gmail.com",
+   "email": "coaching@jeremy-mercier.fr",
    "sameAs": [
     "https://www.google.com/maps?cid=3707848355843675669",
     "https://www.linkedin.com/in/j%C3%A9r%C3%A9my-mercier-480276442/"
@@ -453,8 +453,7 @@
           <span class="line">Boxez <span class="roll"><span class="grad">le&nbsp;stress.</span><span class="grad" aria-hidden="true">la&nbsp;pression.</span><span class="grad" aria-hidden="true">la&nbsp;fatigue.</span></span></span>
           <span class="line"><span class="serif">Retrouvez l’énergie.</span></span>
         </h1>
-        <p class="hero-lead">Par la boxe éducative, j’améliore le bien&#8209;être des <b>dirigeants, entrepreneurs et cadres</b>, et la cohésion des <b>équipes</b> en entreprise.</p>
-        <p class="hero-where flat"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>Séances à Lyon · dans votre entreprise ou hors bureau</p>
+        <p class="hero-lead">La boxe au service du <b>bien&#8209;être</b>, de la <b>cohésion</b> et de la <b>performance professionnelle</b></p>
         <nav class="hero-offers" aria-label="Mes trois coachings">
           <span class="ho-k">Mes 3 coachings</span>
           <ul>
@@ -464,9 +463,6 @@
           </ul>
         </nav>
         <p class="hero-trio" aria-label="Relâcher, évoluer, souder"><span>Relâcher</span><i aria-hidden="true"></i><span>Évoluer</span><i aria-hidden="true"></i><span>Souder</span></p>
-        <div class="hero-cta">
-          <a class="btn btn-secondary btn-big" href="#quiz">Faire le test d’1&nbsp;minute <svg class="ic down" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        </div>
       </div>
 
       <div class="hero-right">
@@ -669,7 +665,16 @@
       <div class="cs-orbit" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       <div class="cs-ring" aria-hidden="true"></div>
       <div class="cs-photo"><img class="cs-img" src="media/jeremy-coach.webp" width="1000" height="1000" alt="Jérémy Mercier, coach de boxe à Lyon, enroule ses bandes de boxe avant une séance" loading="lazy" decoding="async"></div>
-      <div class="cs-mini"><img src="media/coach-run-zoom.webp?v=2" width="600" height="600" alt="Jérémy Mercier en tête d’un groupe qui court en montée" loading="lazy" decoding="async"></div>
+      <!-- médaillon : une photo, une vidéo, une photo, une vidéo… (piloté par site.js) -->
+      <div class="cs-mini cs-reel" id="csReel" role="group" aria-roledescription="carrousel" aria-label="Jérémy en compétition, en photos et en vidéos">
+        <div class="rl-clip">
+          <figure class="rl-it is-on"><img class="rl-ph" src="media/coach-medaille.webp" width="800" height="800" alt="Jérémy Mercier, la médaille autour du cou, poing levé" loading="lazy" decoding="async" style="--o:46% 30%"></figure>
+          <figure class="rl-it" aria-hidden="true"><video class="rl-vd" muted playsinline preload="none" poster="media/coach-combat-1.webp" width="464" height="832" data-reel="media/coach-combat-1.mp4" aria-label="Jérémy en combat sur un ring" style="--o:50% 24%;--z:1.25;--zo:40% 50%"></video></figure>
+          <figure class="rl-it" aria-hidden="true"><img class="rl-ph" src="media/coach-podium.webp" width="760" height="760" alt="Jérémy Mercier sur la première marche du podium, médaille au cou" loading="lazy" decoding="async" style="--o:50% 28%"></figure>
+          <figure class="rl-it" aria-hidden="true"><video class="rl-vd" muted playsinline preload="none" poster="media/coach-combat-2.webp" width="832" height="464" data-reel="media/coach-combat-2.mp4" aria-label="Jérémy en combat de boxe thaïe" style="--o:58% 50%;--z:1.06;--zo:55% 50%"></video></figure>
+        </div>
+        <button class="rl-btn" type="button" data-state="playing" aria-label="Mettre le diaporama en pause"><svg class="ic i-pause" aria-hidden="true"><use href="#i-pause"/></svg><svg class="ic i-play" aria-hidden="true"><use href="#i-play"/></svg></button>
+      </div>
       <div class="tag medal-tag"><svg class="ic" aria-hidden="true"><use href="#i-trophy"/></svg>Compétiteur</div>
       <div class="tag medal-tag m2"><svg class="ic" aria-hidden="true"><use href="#i-medal"/></svg>Ceinture noire</div>
     </div>
@@ -761,7 +766,7 @@
           <div class="ans">
             <p><b>Éditeur et directeur de la publication&nbsp;:</b> Jérémy Mercier, entrepreneur individuel.</p>
             <p><b>SIREN&nbsp;:</b> 130&nbsp;338&nbsp;643. <b>SIRET&nbsp;:</b> 130&nbsp;338&nbsp;643&nbsp;00013.</p>
-            <p><b>Adresse&nbsp;:</b> 5&nbsp;avenue Louis Dufour, 69300 Caluire-et-Cuire. <b>Téléphone&nbsp;:</b> 06&nbsp;31&nbsp;19&nbsp;45&nbsp;69. <b>E&#8209;mail&nbsp;:</b> mercier.bourguignon@gmail.com</p>
+            <p><b>Adresse&nbsp;:</b> 5&nbsp;avenue Louis Dufour, 69300 Caluire-et-Cuire. <b>Téléphone&nbsp;:</b> 06&nbsp;31&nbsp;19&nbsp;45&nbsp;69. <b>E&#8209;mail&nbsp;:</b> coaching@jeremy-mercier.fr</p>
             <p><b>Éducateur sportif&nbsp;:</b> carte professionnelle n° 06925ED0791, préfecture du Rhône, valable jusqu’au 20/10/2030.</p>
             <p><b>Hébergeur&nbsp;:</b> Monarobase, SARL, 3&nbsp;avenue René Laënnec, 72000 Le Mans. Téléphone&nbsp;: +33&nbsp;(0)9&nbsp;72&nbsp;21&nbsp;22&nbsp;90.</p>
           </div>

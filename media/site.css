@@ -1321,3 +1321,44 @@ footer{position:relative;overflow:hidden}
   .bk-bar{position:relative;z-index:1}
   .bk-frame{margin-top:-50px}
 }
+
+/* ---------- V27 : accueil allégé, fond des coachings plus vivant, médaillon animé du coach ---------- */
+/* Premier écran de l'accueil : une seule phrase d'accroche, mise en avant par un filet doré */
+#accueil .hero-lead{font-size:clamp(1.2rem,2vw,1.65rem);line-height:1.3;letter-spacing:-.01em;max-width:30ch;padding-left:18px;border-left:4px solid var(--gold)}
+#accueil .hero-offers{margin-top:4px}
+
+/* Mes coachings : fond vert sauge en dégradé, halos de couleur et fine trame de points ;
+   les cartes deviennent plus lumineuses et se détachent nettement du fond */
+#accompagnements{background:
+  radial-gradient(46% 24% at 0% 26%,rgba(29,191,115,.26),transparent 72%),
+  radial-gradient(42% 24% at 100% 55%,rgba(18,127,160,.22),transparent 72%),
+  radial-gradient(48% 24% at 0% 84%,rgba(214,170,70,.34),transparent 72%),
+  linear-gradient(180deg,#fff 0,#e3f2ea clamp(150px,16vw,280px),#cfe6d9 50%,#dbece2 calc(100% - 180px),#e6f1ea 100%)}
+#accompagnements::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(10,57,34,.11) 1.2px,transparent 1.7px);background-size:26px 26px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 280px,#000 calc(100% - 240px),transparent 100%);
+          mask-image:linear-gradient(to bottom,transparent 0,#000 280px,#000 calc(100% - 240px),transparent 100%)}
+#accompagnements .orow{--t1:#f7fffa;box-shadow:inset 0 0 0 2px rgba(255,255,255,.9),0 34px 70px -38px rgba(6,38,22,.42),0 60px 110px -60px var(--glow)}
+#accompagnements .orow.o3{--t1:#f5fcff}
+#accompagnements .orow.o2{--t1:#fffdf6}
+#accompagnements .offers-note{display:flex;width:fit-content;margin-inline:auto;padding:10px 20px;border-radius:999px;background:rgba(255,255,255,.75);box-shadow:inset 0 0 0 1.5px rgba(10,57,34,.08)}
+
+/* Votre coach : médaillon un peu plus grand qui fait défiler photos et vidéos (piloté par site.js) */
+.cs-reel{width:44%;left:-11%;bottom:-7%;overflow:visible;border:0;background:none;box-shadow:none}
+.rl-clip{position:absolute;inset:0;border-radius:50%;overflow:hidden;border:6px solid #fff;background:var(--forest-deep);box-shadow:0 18px 36px -14px rgba(6,38,22,.65);transform:translateZ(0)}
+.rl-it{position:absolute;inset:0;margin:0;opacity:0;scale:1.06;transition:opacity .9s var(--ease),scale 1.2s var(--ease)}
+.rl-it.is-on{opacity:1;scale:1}
+.rl-it img,.rl-it video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--o,50% 50%);display:block}
+/* léger zoom fixe sur certaines vidéos, centré sur l'action (réglé par --z et --zo sur la vidéo) */
+.rl-it video{scale:var(--z,1);transform-origin:var(--zo,50% 50%)}
+.rl-it.is-on .rl-ph{animation:rlkb 6s ease-out forwards}
+@keyframes rlkb{from{scale:1}to{scale:1.07}}
+.rl-btn{position:absolute;right:2%;bottom:2%;z-index:2;width:38px;height:38px;border-radius:50%;border:3px solid #fff;background:var(--forest);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px -8px rgba(6,38,22,.7);transition:background-color .2s var(--ease)}
+.rl-btn:hover{background:var(--leaf-deep)}
+.rl-btn:active{transform:scale(.92)}
+.rl-btn .ic{width:15px;height:15px;stroke-width:3}
+.rl-btn .i-play,.rl-btn[data-state="paused"] .i-pause{display:none}
+.rl-btn[data-state="paused"] .i-play{display:block}
+.coach-stage .medal-tag{bottom:42%}
+@media (max-width:900px){.cs-reel{width:42%;left:-4%;bottom:-6%}}
+@media (prefers-reduced-motion:reduce){.rl-it{transition:none;scale:1}.rl-it.is-on .rl-ph{animation:none}}

@@ -11,6 +11,10 @@ Contenu :
   « Intervention en entreprise » ; « FitBoxing » sert seulement à l'expliquer.
 - media/site.css et media/site.js : style et script communs à toutes les pages.
 - media/ : polices, photos, vidéos, image de partage (og-image.jpg).
+- Médaillon animé de la section « Votre coach » (une photo, une vidéo, une photo, une vidéo) :
+  media/coach-medaille.webp, coach-combat-1.mp4 (+ .webp, image d'attente), coach-podium.webp,
+  coach-combat-2.mp4 (+ .webp). Les vidéos sont celles d'origine, sans le son (pas de ré-encodage).
+  Cadrage et zoom réglés dans index.html (style="--o:… ;--z:… ;--zo:…" sur chaque image ou vidéo).
 - sitemap.xml, robots.txt, CNAME (nom de domaine).
 - Icônes du site (photo de profil), à la racine : favicon.ico (16, 32, 48 px), favicon-48x48.png,
   favicon-96x96.png, favicon-192x192.png, apple-touch-icon.png (180 px), icon-512.png

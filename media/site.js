@@ -197,6 +197,65 @@
     } else { v._vis=true; play(); }
   });
 
+  /* Votre coach : médaillon qui fait défiler une photo, une vidéo, une photo, une vidéo…
+     - une photo reste 5 s avec un léger zoom lent ; une vidéo est lue une fois en entier, puis on passe à la suite
+     - fondu enchaîné entre deux éléments ; la vidéo suivante se télécharge pendant que la photo est affichée
+     - le défilement ne tourne que lorsque le médaillon est à l'écran ; bouton pause / lecture
+     - animations réduites : le médaillon reste sur la première photo, le bouton lance le défilement
+     - économie de données ou 2G : photos seulement
+     Ces vidéos utilisent data-reel (et non data-src) pour rester hors de la lecture en boucle des vidéos d'offres. */
+  (function(){
+    var reel=d.getElementById('csReel'); if(!reel) return;
+    var btn=reel.querySelector('.rl-btn');
+    var items=[].slice.call(reel.querySelectorAll('.rl-it'));
+    if(lowData){ items=items.filter(function(it){ if(it.querySelector('video')){ it.parentNode.removeChild(it); return false; } return true; }); }
+    if(items.length<2){ if(btn) btn.hidden=true; return; }
+    var cur=0, timer=null, vis=false, paused=!!reduce, PHOTO_MS=5000, FADE_MS=900;
+    function vidOf(it){ return it.querySelector('video'); }
+    function load(v){ if(v&&!v.getAttribute('src')){ v.preload='auto'; v.src=v.getAttribute('data-reel'); v.load(); } }
+    function setBtn(){
+      btn.setAttribute('data-state',paused?'paused':'playing');
+      btn.setAttribute('aria-label',paused?'Lire le diaporama':'Mettre le diaporama en pause');
+    }
+    function stop(){ clearTimeout(timer); timer=null; var v=vidOf(items[cur]); if(v&&!v.paused) v.pause(); }
+    function next(){ show((cur+1)%items.length); }
+    function run(){
+      stop(); if(paused||!vis) return;
+      var v=vidOf(items[cur]);
+      load(vidOf(items[(cur+1)%items.length]));
+      if(!v){ timer=setTimeout(next,PHOTO_MS); return; }
+      load(v);
+      /* garde-fou : si la fin de la vidéo n'est jamais signalée, on passe quand même à la suite */
+      function guard(){
+        var left=(isFinite(v.duration)&&v.duration>0)?(v.duration-v.currentTime)*1000:12000;
+        clearTimeout(timer); timer=setTimeout(next,left+1500);
+      }
+      var p=v.play();
+      if(p&&p.then){ p.then(guard,function(){ clearTimeout(timer); timer=setTimeout(next,3500); }); } else guard();
+    }
+    function show(n){
+      if(n===cur) return;
+      var old=items[cur], ov=vidOf(old);
+      old.classList.remove('is-on'); old.setAttribute('aria-hidden','true');
+      cur=n; var it=items[cur], v=vidOf(it);
+      if(v){ try{ v.currentTime=0; }catch(x){} }
+      it.classList.add('is-on'); it.removeAttribute('aria-hidden');
+      if(ov){ setTimeout(function(){ if(items[cur]!==old){ ov.pause(); try{ ov.currentTime=0; }catch(x){} } },FADE_MS); }
+      run();
+    }
+    items.forEach(function(it){
+      var v=vidOf(it); if(!v) return;
+      v.muted=true; v.defaultMuted=true; v.loop=false; v.disablePictureInPicture=true;
+      v.addEventListener('ended',function(){ if(items[cur]===it&&!paused) next(); });
+      v.addEventListener('error',function(){ if(items[cur]===it&&!paused){ clearTimeout(timer); timer=setTimeout(next,800); } });
+    });
+    btn.addEventListener('click',function(){ paused=!paused; setBtn(); if(paused) stop(); else run(); });
+    setBtn();
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){ es.forEach(function(e){ vis=e.isIntersecting; if(vis) run(); else stop(); }); },{threshold:.25}).observe(reel);
+    } else { vis=true; run(); }
+  })();
+
   /* Mes coachings : une rangée par offre (#individuel, #intervention-entreprise, #team-building).
      Les liens vers ces ancres font défiler jusqu'à la rangée, déjà affichée (sans attendre l'animation d'apparition). */
   var OFFERS=['individuel','team-building','intervention-entreprise'];
