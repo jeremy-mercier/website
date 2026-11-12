@@ -1378,22 +1378,16 @@ footer{position:relative;overflow:hidden}
 .ho-3 .ho-ic{background:#a6dbf2}
 .ho-2 .ho-ic{background:#f8d77f}
 
-/* ---------- V29 : premier écran resserré, compris d'un coup d'œil ----------
-   Ordre de lecture : accroche (titre) -> promesse (2 lignes) -> action (appel gratuit) -> les 3 coachings.
-   Sur téléphone, portrait plus petit pour que titre et bouton apparaissent dès l'arrivée. */
+/* ---------- V29 : premier écran sobre, compris d'un coup d'œil ----------
+   Seulement l'essentiel : qui / où (surtitre), l'accroche (titre), la promesse (2 lignes), les 3 coachings,
+   et le portrait avec un seul repère de confiance (ceinture noire, éducateur sportif).
+   Sur téléphone, portrait plus petit pour que le titre apparaisse dès l'arrivée. */
 .hero-band{padding-top:clamp(28px,4.4vw,72px)}
-#accueil .hero-left{gap:clamp(18px,2.2vw,26px)}
+#accueil .hero-left{gap:clamp(20px,2.4vw,30px)}
 #accueil h1 .eyebrow{margin-bottom:clamp(16px,2vw,24px)}
 #accueil .hero-lead{max-width:none;font-size:clamp(1.05rem,1.55vw,1.42rem);line-height:1.35;text-wrap:balance}
-#accueil .hero-go{gap:12px 20px;margin-top:2px}
-.hero-note{display:inline-flex;align-items:center;gap:8px;color:var(--mute-on-dark);font-weight:600;font-size:.98rem}
-.hero-note .ic{width:18px;height:18px;color:var(--leaf);stroke-width:2.6}
-#accueil .hero-offers{margin-top:6px}
+#accueil .hero-offers{margin-top:4px}
 @media (max-width:900px){
   #accueil .hero-right{max-width:250px}
   #accueil .hero-lead{padding-left:14px;border-left-width:3px}
-}
-@media (max-width:480px){
-  #accueil .hero-go .btn-big{width:100%;padding-inline:18px}
-  #accueil .hero-note{width:100%;justify-content:center;margin-top:-4px}
 }
