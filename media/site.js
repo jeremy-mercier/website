@@ -333,7 +333,14 @@
     cnt.forEach(function(el){ el.textContent='0'+(el.getAttribute('data-suf')||''); cio.observe(el); });
   }
 
-  /* ================= Mini quiz d'une minute (questions adaptées à chaque frein) ================= */
+  /* ================= Quiz « Quel coaching pour vous ? » : orienter vers la bonne offre en 4 questions =================
+     - Question 1 : pour qui ? -> un particulier (coaching individuel) ou une entreprise (intervention / team building)
+     - Particulier : ce qui pèse, niveau de sport, moment préféré -> coaching individuel, avec 3 repères personnalisés
+     - Entreprise : format, objectif, taille du groupe
+       -> séances régulières = intervention en entreprise ; temps fort ponctuel = team building ;
+          « je ne sais pas encore » = selon l'objectif (stress, énergie -> intervention ; cohésion, événement -> team building)
+     - Résultat : un conseil clair, 3 raisons tirées des réponses, « Réserver mon appel » + « Découvrir l'offre ».
+       Aucun chiffre inventé : c'est un premier repère, affiné pendant l'appel. */
   var QUIZ={need:null,text:null};
   (function(){
     var body=d.getElementById('qzBody'), bar=d.getElementById('qzBar'), stepEl=d.getElementById('qzStep');
@@ -346,104 +353,60 @@
       equipe:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle class="a-c1" cx="8" cy="12" r="4.2"/><circle class="a-c2" cx="16" cy="12" r="4.2"/></svg>'
     };
     function ic(n){ return ICON[n]||'<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-'+n+'"/></svg>'; }
-    var FR=[['pression','Pression'],['temps','Manque de temps'],['fatigue','Fatigue mentale'],['equipe','Équipe tendue']];
-    /* Dernière question des parcours 1 à 3 : les trois offres. Pour l'intervention en entreprise, « Mon aide » affiche
-       ses propres étapes (steps) : séances et durée se décident avec l'entreprise, rien n'est fixé à l'avance. */
-    var O4=[{i:'user',l:'Seul à la barre',rec:'Coaching individuel',need:'Individuel'},
-      {i:'brief',l:'Avec mon équipe, dans la durée',rec:'Intervention en entreprise',need:'Intervention en entreprise',
-       steps:['Du FitBoxing&nbsp;: un mélange de boxe et de fitness','Directement dans votre entreprise, de façon régulière','Nombre de séances et durée définis avec vous']},
-      {i:'users',l:'Avec mon équipe, pour un temps fort',rec:'Team building',need:'Team building'}];
-    var P=[
-    /* ---------- 0 : pression ---------- */
-    {name:'Sous <span class="serif">pression</span>',icon:'pression',
-     q2:'Comment la pression <span class="serif">se manifeste</span>-t-elle&nbsp;?',
-     o2:[
-      {i:'moon',l:'Je rumine, même la nuit',sent:'Les décisions tournent en boucle, même la nuit',a:'On vide la tête avec des séries courtes et intenses',b:'On finit par un retour au calme guidé, respiration comprise',m:[['Décrochage',.9],['Calme',.85],['Focus',.75]],day:['Un soir qui se détend enfin','Une tête qui se vide'],pro:['Des décisions plus posées','Moins de rumination au bureau']},
-      {i:'bolt',l:'Je m’irrite vite',sent:'La patience s’use plus vite que vous ne le voudriez',a:'On évacue la tension en frappant dans les pattes d’ours',b:'On travaille le rythme&nbsp;: frapper, respirer, reprendre',m:[['Patience',.9],['Calme',.85],['Énergie',.75]],day:['Plus de patience à la maison','Des réactions plus mesurées'],pro:['Des échanges plus sereins avec l’équipe','Du recul face aux imprévus']},
-      {i:'shield',l:'Tout est crispé',sent:'Épaules, nuque, mâchoire&nbsp;: le corps garde la tension',a:'On mobilise les épaules et le haut du dos dès l’échauffement',b:'Des enchaînements fluides, qui relâchent au lieu de fatiguer',m:[['Détente',.9],['Énergie',.8],['Calme',.8]],day:['Un corps moins crispé','Une posture plus libre'],pro:['Moins de tension en fin de journée','Plus de présence en réunion']},
-      {i:'phone',l:'Je n’arrive pas à décrocher',sent:'Le travail vous suit jusque dans la soirée',a:'On installe un rituel de fin de journée, court et net',b:'Une séance qui fait basculer du mode travail au mode repos',m:[['Décrochage',.9],['Calme',.85],['Énergie',.7]],day:['Une vraie coupure le soir','Du temps pleinement pour vos proches'],pro:['Un esprit plus frais le lendemain','Moins de dossiers ressassés']}
-     ],
-     q3:'Quelle situation vous <span class="serif">met</span> le plus sous tension&nbsp;?',
-     o3:[
-      {i:'target',l:'Les décisions à fort enjeu',c:'Des exercices de calme sous pression, pour garder la tête froide',pro:'Des décisions prises avec plus de recul'},
-      {i:'speak',l:'Négociations, clients exigeants',c:'Des mises en situation pour rester posé face à la tension',pro:'Plus d’assurance en négociation'},
-      {i:'users',l:'Management et conflits',c:'On travaille posture et voix, pour garder votre calme avec l’équipe',pro:'Un management plus apaisé'},
-      {i:'trend',l:'Une charge qui ne s’arrête jamais',c:'Des séances courtes et régulières, calées sur vos pics de charge',pro:'Une charge mieux encaissée dans la durée'}
-     ],
-     q4:'Vous avancez <span class="serif">comment</span>&nbsp;?',
-     o4:O4},
-    /* ---------- 1 : temps ---------- */
-    {name:'Agenda <span class="serif">saturé</span>',icon:'temps',
-     q2:'Qu’est-ce qui <span class="serif">dévore</span> votre temps&nbsp;?',
-     o2:[
-      {i:'speak',l:'Des réunions enchaînées',sent:'Les réunions s’enchaînent, sans une minute pour vous',a:'Une séance de 30 minutes, pensée pour tenir entre deux rendez-vous',b:'Zéro temps mort&nbsp;: chaque minute compte',m:[['Rythme',.85],['Focus',.8],['Énergie',.8]],day:['Une vraie pause dans la journée','Un créneau qui devient intouchable'],pro:['Plus d’énergie entre deux réunions','Des réunions mieux suivies']},
-      {i:'brief',l:'Des déplacements',sent:'Les déplacements mangent vos semaines',a:'Des séances calées sur votre ville du jour, sans matériel lourd',b:'Un format court à refaire seul, pour garder le rythme en voyage',m:[['Régularité',.85],['Énergie',.8],['Focus',.75]],day:['Une routine qui vous suit partout','Moins de fatigue de voyage'],pro:['De l’énergie en fin de déplacement','Une forme stable malgré l’agenda']},
-      {i:'bolt',l:'Des urgences de dernière minute',sent:'Les urgences bousculent tout, y compris vos créneaux',a:'Des créneaux souples, ajustés selon votre semaine',b:'Une séance «&nbsp;de secours&nbsp;» express pour les jours tendus',m:[['Souplesse',.85],['Calme',.8],['Énergie',.8]],day:['Moins de stress pour tenir votre planning','Une routine qui résiste aux imprévus'],pro:['Plus de sang-froid face à l’urgence','Des priorités mieux tenues']},
-      {i:'moon',l:'Des journées qui finissent à 21&nbsp;h',sent:'Les journées débordent et il ne reste rien pour vous',a:'On vise un créneau tôt ou sur le déjeuner, avant que la journée n’avale tout',b:'Une séance qui redonne de l’énergie au lieu d’en prendre',m:[['Énergie',.9],['Rythme',.85],['Focus',.75]],day:['Du temps à vous, sans culpabilité','Des soirées moins écrasées'],pro:['Des journées mieux bornées','Plus d’efficacité dans le temps imparti']}
-     ],
-     q3:'Quel créneau <span class="serif">tiendrait</span> vraiment&nbsp;?',
-     o3:[
-      {i:'sun',l:'Avant 8&nbsp;h',c:'Séance avant le premier rendez-vous, pour démarrer avec de l’élan',pro:'Une journée lancée avec de l’élan',slot:'Avant 8 h'},
-      {i:'star',l:'Sur le déjeuner',c:'Séance express sur la pause déjeuner',pro:'Un après-midi sans coup de barre',slot:'Pause déjeuner'},
-      {i:'moon',l:'En fin de journée',c:'Séance qui ferme la journée et libère la soirée',pro:'Un passage net du travail au repos',slot:'Fin de journée'},
-      {i:'shield',l:'Sur site, dans mes locaux',c:'Je viens à vous&nbsp;: aucun trajet, aucun temps perdu',pro:'Zéro temps de trajet perdu',slot:'Sur site'}
-     ],
-     q4:'Vous avancez <span class="serif">comment</span>&nbsp;?',
-     o4:O4},
-    /* ---------- 2 : fatigue ---------- */
-    {name:'Batterie <span class="serif">faible</span>',icon:'fatigue',
-     q2:'Comment la fatigue <span class="serif">se voit</span>-elle&nbsp;?',
-     o2:[
-      {i:'sun',l:'Le brouillard de l’après-midi',sent:'Après le déjeuner, la concentration s’effondre',a:'Une séance placée avant ou pendant ce creux pour le réveiller',b:'Des efforts courts et vifs qui relancent la machine',m:[['Vivacité',.9],['Focus',.85],['Énergie',.8]],day:['Un après-midi sans coup de barre','Moins de café pour tenir'],pro:['Une concentration plus stable','Des dossiers complexes mieux traités l’après-midi']},
-      {i:'target',l:'Mal à me concentrer longtemps',sent:'Rester concentré longtemps devient un effort',a:'On entraîne la concentration avec des enchaînements qui demandent toute votre attention',b:'Une heure, un seul geste&nbsp;: l’esprit apprend à se fixer',m:[['Focus',.9],['Énergie',.8],['Humeur',.75]],day:['Un esprit plus clair','Moins de dispersion'],pro:['Des tâches longues menées à bout','Moins d’erreurs d’inattention']},
-      {i:'bolt',l:'Je tiens au café',sent:'Le café remplace l’énergie qui manque',a:'On remet du mouvement au cœur de la journée',b:'Un effort progressif qui recharge au lieu de vider',m:[['Énergie',.9],['Humeur',.8],['Focus',.75]],day:['Une énergie plus naturelle','Moins besoin du coup de fouet'],pro:['Une énergie plus régulière','Une présence plus affirmée']},
-      {i:'moon',l:'Je me réveille déjà fatigué',sent:'Le matin, vous démarrez déjà à plat',a:'On construit une routine d’activité douce et régulière',b:'Des séances qui laissent de l’énergie, jamais épuisé',m:[['Élan',.9],['Humeur',.8],['Énergie',.8]],day:['Un matin plus vif','Un corps qui se sent bien'],pro:['Un démarrage de journée plus net','Une meilleure forme dans la durée']}
-     ],
-     q3:'Où en êtes-vous <span class="serif">côté sport</span>&nbsp;?',
-     o3:[
-      {i:'user',l:'Je n’en fais plus depuis longtemps',c:'On repart de zéro, doucement, avec des gestes simples',pro:'Une reprise sans pression'},
-      {i:'trend',l:'Un peu, quand je peux',c:'On donne un cadre à ce que vous faites déjà',pro:'Une régularité qui s’installe'},
-      {i:'smile',l:'Je m’entraîne, sans plaisir',c:'On remet de l’envie&nbsp;: variété, jeu, frappe',pro:'Le plaisir de bouger retrouvé'},
-      {i:'cross',l:'Une gêne me freine',c:'On adapte les gestes, avec l’avis de votre médecin si besoin',pro:'Une activité adaptée à votre corps'}
-     ],
-     q4:'Vous avancez <span class="serif">comment</span>&nbsp;?',
-     o4:O4},
-    /* ---------- 3 : équipe ---------- */
-    {name:'Équipe sous <span class="serif">tension</span>',icon:'equipe',
-     q2:'Qu’<span class="serif">observez</span>-vous dans l’équipe&nbsp;?',
-     o2:[
-      {i:'speak',l:'Peu de communication entre services',sent:'Chaque service travaille dans son coin',a:'Des exercices à deux qui obligent à s’écouter et se coordonner',b:'On mélange les services pour casser les silos',m:[['Communication',.9],['Cohésion',.85],['Ambiance',.8]],day:['Des rencontres inattendues entre collègues','Des visages qui se connaissent enfin'],pro:['Une communication plus fluide','Des projets transverses facilités']},
-      {i:'shield',l:'Des tensions, des non-dits',sent:'Des tensions couvent et personne n’en parle',a:'On libère la pression collective en frappant ensemble',b:'Des défis à plusieurs qui remettent du rire et du lien',m:[['Ambiance',.9],['Confiance',.85],['Énergie',.8]],day:['Une atmosphère plus légère','Des rires partagés'],pro:['Des tensions qui retombent','Plus de confiance entre collègues']},
-      {i:'trend',l:'Une motivation en baisse',sent:'L’élan collectif s’essouffle',a:'On remet du rythme et de l’énergie dans le groupe',b:'Des défis par petites équipes pour retrouver l’envie',m:[['Motivation',.9],['Énergie',.85],['Cohésion',.8]],day:['Une équipe qui a envie de se retrouver','Des sourires au bureau'],pro:['Une équipe plus mobilisée','Plus d’élan sur les objectifs']},
-      {i:'star',l:'Une équipe toute nouvelle',sent:'Les nouveaux ne se connaissent pas encore',a:'Un format d’accueil&nbsp;: on bouge, on rit, on se découvre',b:'Des exercices à deux qui créent du lien dès la première séance',m:[['Cohésion',.9],['Confiance',.85],['Ambiance',.85]],day:['Un groupe qui se rapproche vite','Une intégration plus chaleureuse'],pro:['Une équipe soudée plus tôt','Des nouveaux plus à l’aise']}
-     ],
-     q3:'Quel est votre <span class="serif">objectif</span> principal&nbsp;?',
-     o3:[
-      {i:'users',l:'Renforcer la cohésion',c:'Un programme sur plusieurs séances pour ancrer le lien',pro:'Un esprit d’équipe durable'},
-      {i:'smile',l:'Apaiser les tensions',c:'Une séance d’abord détente, sans compétition',pro:'Un climat de travail plus serein'},
-      {i:'bolt',l:'Redonner de l’énergie',c:'Une séance dynamique, en début ou en fin de semaine',pro:'Une équipe qui repart avec de l’énergie'},
-      {i:'trophy',l:'Marquer un événement',c:'Un team building sur mesure pour fêter un cap ou un lancement',pro:'Un souvenir commun fort'}
-     ],
-     q4:'Combien de <span class="serif">personnes</span>&nbsp;?',
-     o4:[{i:'users',l:'Moins de 10',rec:'Team building, en petit groupe',need:'Team building'},{i:'users',l:'De 10 à 30',rec:'Team building',need:'Team building'},{i:'users',l:'Plus de 30',rec:'Team building, en sous-groupes',need:'Team building'}]}
+    var OFFRES={
+      ind:{rec:'Coaching <span class="serif">individuel</span>',plain:'Coaching individuel',cls:'r1',href:'/coaching-individuel-boxe-lyon/'},
+      int:{rec:'Intervention <span class="serif">en entreprise</span>',plain:'Intervention en entreprise',cls:'r3',href:'/intervention-entreprise-boxe-lyon/',
+           fmt:'Du FitBoxing (boxe + fitness) dans vos locaux, à un rythme défini avec vous'},
+      team:{rec:'<span class="serif">Team</span> building',plain:'Team building',cls:'r2',href:'/team-building-boxe-lyon/',
+           fmt:'Des défis ludiques et des exercices à deux, dans vos locaux ou ailleurs, tous niveaux'}
+    };
+    var Q1={q:'Le coaching, c’est <span class="serif">pour qui</span>&nbsp;?',opts:[
+      {i:'user',l:'Pour moi',s:'Particulier'},
+      {i:'brief',l:'Pour mon entreprise',s:'Entreprise'}]};
+    var PART=[
+      {q:'Qu’est-ce qui vous <span class="serif">pèse</span> le plus en ce moment&nbsp;?',opts:[
+        {i:'pression',l:'Le stress, la pression',goal:'relâcher la pression',why:'On évacue la tension en frappant, puis on termine au calme, respiration comprise'},
+        {i:'fatigue',l:'La fatigue, le manque d’énergie',goal:'retrouver de l’énergie',why:'Des efforts courts et vifs, qui redonnent de l’énergie au lieu d’en prendre'},
+        {i:'temps',l:'Pas le temps de bouger',goal:'bouger malgré un agenda chargé',why:'Des séances efficaces, sans temps mort, qui trouvent leur place dans votre semaine'},
+        {i:'target',l:'L’envie de me remettre au sport',goal:'reprendre le sport avec plaisir',why:'Une reprise progressive, avec le plaisir de frapper et de progresser'}]},
+      {q:'Où en êtes-vous <span class="serif">côté sport</span>&nbsp;?',opts:[
+        {i:'user',l:'Rien depuis longtemps',why:'On repart de zéro, avec des gestes simples montrés pas à pas'},
+        {i:'trend',l:'Un peu, de temps en temps',why:'On donne un cadre et de la régularité à ce que vous faites déjà'},
+        {i:'bolt',l:'Je m’entraîne régulièrement',why:'On monte en intensité, avec de la vraie technique de boxe'},
+        {i:'cross',l:'Une gêne me freine',why:'Chaque geste est adapté à votre corps, avec l’avis de votre médecin si besoin'}]},
+      {q:'Quel moment vous <span class="serif">arrange</span>&nbsp;?',opts:[
+        {i:'sun',l:'Le matin',slot:'le matin'},
+        {i:'star',l:'Sur le temps du midi',slot:'sur le temps du midi'},
+        {i:'moon',l:'En fin de journée',slot:'en fin de journée'},
+        {i:'cal',l:'Ça dépend des semaines',slot:'calées semaine après semaine'}]}
     ];
-    var step=0, ans=[];
+    var ENT=[
+      {q:'Vous imaginez plutôt <span class="serif">quel format</span>&nbsp;?',opts:[
+        {i:'cal',l:'Des séances régulières',s:'Toute l’année',fmt:'int'},
+        {i:'trophy',l:'Un temps fort ponctuel',s:'Séminaire, événement…',fmt:'team'},
+        {i:'info',l:'Je ne sais pas encore',s:'On regarde ensemble',fmt:null}]},
+      {q:'Votre <span class="serif">objectif</span> principal&nbsp;?',opts:[
+        {i:'smile',l:'Moins de stress dans les équipes',lean:'int',goal:'faire baisser la pression',why:'Des séances qui font retomber la pression, semaine après semaine'},
+        {i:'users',l:'Plus de cohésion',lean:'team',goal:'renforcer la cohésion',why:'Des défis à deux et en petits groupes, qui rapprochent les collègues'},
+        {i:'bolt',l:'Plus d’énergie au travail',lean:'int',goal:'redonner de l’énergie',why:'Un effort dynamique qui relance l’énergie de toute l’équipe'},
+        {i:'star',l:'Marquer un événement',lean:'team',goal:'marquer un événement',why:'Un moment fort et fédérateur, dont l’équipe se souviendra'}]},
+      {q:'Combien de <span class="serif">personnes</span>&nbsp;?',opts:[
+        {i:'user',l:'Moins de 10',why:'En petit groupe, chacun est suivi de près'},
+        {i:'users',l:'De 10 à 30',why:'Un groupe complet, encadré du premier au dernier geste'},
+        {i:'users',l:'Plus de 30',why:'En sous-groupes, pour que chacun participe vraiment'}]}
+    ];
+    var ans=[];
+    function path(){ return ans[0]===1?ENT:PART; }
+    function spec(i){ return i===0?Q1:path()[i-1]; }
     function setProg(n,txt){ bar.style.width=(n/N*100)+'%'; stepEl.textContent=txt; }
     function view(html){ body.style.animation='none'; void body.offsetWidth; body.style.animation=''; body.innerHTML=html; }
-    function spec(i){
-      var p=P[ans[0]];
-      if(i===0) return {q:'Qu’est-ce qui vous <span class="serif">pèse</span> le plus&nbsp;?',opts:FR.map(function(f){return {i:f[0],l:f[1]};})};
-      if(i===1) return {q:p.q2,opts:p.o2};
-      if(i===2) return {q:p.q3,opts:p.o3};
-      return {q:p.q4,opts:p.o4};
-    }
     function ask(i){
-      step=i; var s=spec(i);
+      var s=spec(i);
       setProg(i,(i+1)+'/'+N);
       var cls=s.opts.length===2?' two':(s.opts.length===3?' three':'');
       var h='<h2 class="qz-q" id="qzQ" tabindex="-1">'+s.q+'</h2><div class="qz-opts'+cls+'" role="group" aria-labelledby="qzQ">';
       s.opts.forEach(function(o,k){
-        h+='<button type="button" class="qz-opt" data-k="'+k+'" aria-pressed="'+(ans[i]===k?'true':'false')+'"><span class="bub">'+ic(o.i)+'</span><span>'+o.l+'</span></button>';
+        h+='<button type="button" class="qz-opt" data-k="'+k+'" aria-pressed="'+(ans[i]===k?'true':'false')+'"><span class="bub">'+ic(o.i)+'</span><span>'+o.l+(o.s?'<small>'+o.s+'</small>':'')+'</span></button>';
       });
       h+='</div>'+(i>0?'<button type="button" class="qz-back" id="qzBack"><svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg>Retour</button>':'');
       view(h);
@@ -458,29 +421,40 @@
       var bk=d.getElementById('qzBack'); if(bk) bk.addEventListener('click',function(){ ask(i-1); });
     }
     function plain(t){ return t.replace(/&nbsp;/g,' ').replace(/<[^>]+>/g,''); }
+    /* le conseil : l'offre, une phrase d'objectif et 3 raisons tirées des réponses */
+    function decide(){
+      if(ans[0]!==1){
+        var a=PART[0].opts[ans[1]], b=PART[1].opts[ans[2]], c=PART[2].opts[ans[3]];
+        return {who:'part',offre:OFFRES.ind,sum:'Votre objectif&nbsp;: '+a.goal+'. Voici comment on s’y prend&nbsp;:',
+          why:[a.why,b.why,'En tête à tête à Lyon, avec des séances '+c.slot]};
+      }
+      var f=ENT[0].opts[ans[1]], g=ENT[1].opts[ans[2]], n=ENT[2].opts[ans[3]], o=OFFRES[f.fmt||g.lean];
+      return {who:'ent',offre:o,unsure:!f.fmt,sum:'Votre objectif&nbsp;: '+g.goal+'. Voici ce que je vous propose&nbsp;:',why:[g.why,o.fmt,n.why]};
+    }
     function compute(){
       setProg(N,N+'/'+N);
-      var p=P[ans[0]], o2=p.o2[ans[1]], o3=p.o3[ans[2]], o4=p.o4[ans[3]];
-      QUIZ.need=o4.need;
-      QUIZ.text={frein:FR[ans[0]][1],symptome:plain(o2.l),contexte:plain(o3.l),format:plain(o4.l)};
-      if(reduce){ result(); return; }
-      view('<div class="qz-load" role="status"><div class="gl"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#d-glove"/></svg></div><b>Je compose votre programme…</b><div class="qz-dots" aria-hidden="true"><i></i><i></i><i></i></div></div>');
-      setTimeout(result,1500);
+      var r=decide();
+      QUIZ.need=r.offre.plain;
+      QUIZ.text={pour:plain(Q1.opts[ans[0]].s),reponses:[1,2,3].map(function(k){ return plain(path()[k-1].opts[ans[k]].l); })};
+      if(reduce){ result(r); return; }
+      view('<div class="qz-load" role="status"><div class="gl"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#d-glove"/></svg></div><b>Je prépare mon conseil…</b><div class="qz-dots" aria-hidden="true"><i></i><i></i><i></i></div></div>');
+      setTimeout(function(){ result(r); },1100);
     }
-    function li(t){ return '<li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>'+t+'</li>'; }
-    function result(){
-      var p=P[ans[0]], o2=p.o2[ans[1]], o3=p.o3[ans[2]], o4=p.o4[ans[3]];
-      var team=o4.need!=='Individuel', steps=o4.steps||[o2.a,o2.b,o3.c];
-      var h='<h2 class="qz-q" id="qzQ" tabindex="-1">Votre programme <span class="serif">sur mesure</span></h2><div class="qz-grid">'
-      +'<article class="qc" style="--d:.05s"><p class="qh"><span class="fnum">1</span>Votre frein</p><div class="qic">'+ic(p.icon)+'</div><h3 class="qname">'+p.name+'</h3><p class="sent">'+o2.sent+'.</p><div class="qtags"><span class="tag">'+o2.l+'</span><span class="tag">'+o3.l+'</span></div></article>'
-      +'<article class="qc" style="--d:.25s"><p class="qh"><span class="fnum">2</span>Mon aide</p><ol class="qsteps"><li>'+steps.join('</li><li>')+'</li></ol><span class="tag qrec"><svg class="ic" aria-hidden="true"><use href="#'+(team?'i-users':'i-user')+'"/></svg>'+o4.rec+'</span>'+(o3.slot?'<span class="tag qrec alt"><svg class="ic" aria-hidden="true"><use href="#i-cal"/></svg>Créneau&nbsp;: '+o3.slot+'</span>':'')+'</article>'
-      +'<article class="qc" id="qzGain" style="--d:.45s"><p class="qh"><span class="fnum">3</span>Vos gains</p><div class="meters">'
-      +o2.m.map(function(m,k){ return '<div class="mt"><span>'+m[0]+'</span><span class="bar"><i style="--from:18%;--to:'+Math.round(m[1]*100)+'%;--dl:'+(.9+k*.25)+'s"></i></span></div>'; }).join('')
-      +'</div><div class="gl2"><div><b>Au quotidien</b><ul>'+o2.day.map(li).join('')+'</ul></div><div><b>Dans votre vie pro</b><ul>'+o2.pro.concat([o3.pro]).map(li).join('')+'</ul></div></div></article></div>'
-      +'<div class="qz-cta"><span class="halo"><a class="btn btn-primary btn-big" href="#rdv">Je veux ce programme <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a></span><button type="button" class="qz-redo" id="qzRedo">Refaire le quiz</button><p class="qz-note">Illustration de ce que vous pouvez viser, selon votre régularité. Le coaching n’est pas un acte médical.</p></div>';
+    function li(t){ return '<li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>'+t+'</span></li>'; }
+    function result(r){
+      var o=r.offre, ent=r.who==='ent';
+      var h='<h2 class="qz-q" id="qzQ" tabindex="-1">Mon conseil <span class="serif">'+(ent?'pour votre entreprise':'pour vous')+'</span></h2>'
+      +'<article class="qr '+o.cls+'">'
+      +'<p class="qr-for"><svg class="ic" aria-hidden="true"><use href="#'+(ent?'i-brief':'i-user')+'"/></svg>'+(ent?'Entreprises':'Particuliers')+'</p>'
+      +'<h3 class="qr-name">'+o.rec+'</h3>'
+      +'<p class="qr-sum">'+r.sum+'</p>'
+      +'<ul class="qr-why">'+r.why.map(li).join('')+'</ul>'
+      +(r.unsure?'<p class="qr-alt">Bon à savoir&nbsp;: les deux formats se combinent très bien. Un team building lance la dynamique, des séances régulières la font durer.</p>':'')
+      +'<div class="qr-cta"><a class="btn btn-primary" href="#rdv">Réserver mon appel de 5&nbsp;min <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>'
+      +'<a class="btn btn-secondary" href="'+o.href+'">Découvrir l’offre <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>'
+      +'</article>'
+      +'<div class="qz-cta"><button type="button" class="qz-redo" id="qzRedo">Refaire le quiz</button><p class="qz-note">Un premier repère, pas un diagnostic&nbsp;: on affine ensemble pendant l’appel, gratuit et sans engagement.</p></div>';
       view(h);
-      var g=d.getElementById('qzGain');
-      setTimeout(function(){ if(g) g.classList.add('go'); },reduce?0:900);
       var rd=d.getElementById('qzRedo'); if(rd) rd.addEventListener('click',function(){ ans=[]; QUIZ.need=null; QUIZ.text=null; ask(0); });
       confetti();
     }

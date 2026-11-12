@@ -1391,3 +1391,26 @@ footer{position:relative;overflow:hidden}
   #accueil .hero-right{max-width:280px;margin-bottom:8px}
   #accueil .hero-lead{padding-left:14px;border-left-width:3px}
 }
+
+/* ---------- V30 : quiz d'orientation « Quel coaching pour vous ? » ----------
+   Le résultat est une seule carte de conseil, aux couleurs de l'offre recommandée
+   (vert : coaching individuel, bleu : intervention en entreprise, or : team building). */
+.qr{--t1:#dffbec;--t2:#79dca6;--acc:#0a6b3d;position:relative;display:grid;gap:14px;justify-items:start;max-width:780px;
+  padding:clamp(20px,3vw,34px);border-radius:36px;background:linear-gradient(135deg,var(--t1),var(--t2));color:var(--forest);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.9),0 30px 60px -34px rgba(0,0,0,.6);animation:qrise .7s var(--ease) both}
+.qr.r3{--t1:#def4fd;--t2:#78c5ea;--acc:#0a5f82}
+.qr.r2{--t1:#fff4d2;--t2:#f5c24c;--acc:#7a4f00}
+.qr-for{display:inline-flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border-radius:999px;background:#fff;font-weight:700;font-size:.9rem}
+.qr-for .ic{width:22px;height:22px;color:var(--acc)}
+.qr-name{font-size:clamp(1.9rem,3.4vw,2.8rem);line-height:1;letter-spacing:-.03em}
+.qr-name .serif{color:var(--acc)}
+.qr-sum{font-size:clamp(1.02rem,1.4vw,1.15rem);line-height:1.45;color:#24332b;font-weight:500}
+.qr-why{display:grid;gap:10px}
+.qr-why li{display:flex;gap:12px;align-items:flex-start;font-weight:600;line-height:1.4}
+.qr-why li .ic{flex:none;width:26px;height:26px;padding:5px;border-radius:50%;background:var(--forest);color:var(--gold);stroke-width:2.6}
+.qr-alt{font-size:.95rem;line-height:1.45;color:#24332b;padding:10px 14px;border-radius:16px;background:rgba(255,255,255,.65)}
+.qr-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+.qr .btn-secondary{color:var(--forest);border-color:var(--forest)}
+.qr .btn-secondary:hover{background:rgba(10,57,34,.09)}
+@media (max-width:560px){.qr-cta .btn{width:100%}}
+@media (prefers-reduced-motion:reduce){.qr{animation:none}}
